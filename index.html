@@ -122,6 +122,22 @@ canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:90}
 .dq-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:12px;color:var(--muted)}
 .prog{height:6px;background:#0f2242;border-radius:3px;overflow:hidden;margin-top:8px}
 .prog i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 10px var(--cyan);transition:width .6s}
+.adj{display:flex;gap:6px;margin-top:7px}
+.adj button{font-size:11px;font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.08em;padding:4px 9px;border:1px solid var(--line);border-radius:3px;color:var(--muted);background:#07101f}
+.hero{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-top:14px}
+.hero .av-b{width:58px;height:58px;border-radius:50%;padding:2px;background:conic-gradient(var(--cyan),var(--purple),var(--blue),var(--cyan));box-shadow:0 0 14px #2d8cff66}
+.hero .av-b div{width:100%;height:100%;border-radius:50%;background:#0a1630;display:grid;place-items:center;font-size:26px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;grid-column:1/-1}
+.hero-stats div{border:1px solid var(--line);border-radius:4px;padding:8px;text-align:center;background:#07101f}
+.hero-stats b{display:block;font-family:Rajdhani,sans-serif;font-size:18px}
+.hero-stats span{font-size:10px;color:var(--muted);font-family:Rajdhani,sans-serif;letter-spacing:.12em}
+.acc{width:100%;display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid #12264a;text-align:left}
+.acc .lab{flex:1;font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.12em;font-size:14px}
+.acc .cnt{font-family:Rajdhani,sans-serif;font-weight:700;font-size:14px;color:var(--muted)}
+.acc .cnt.full{color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.acc .chev{color:var(--muted);transition:transform .2s;font-size:12px}
+.acc.open .chev{transform:rotate(90deg)}
+.acc-body{padding:2px 0 8px 4px;border-bottom:1px solid #12264a}
 .warn{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.4}
 
 /* challenge */
@@ -183,8 +199,9 @@ canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:90}
 @keyframes pop{50%{transform:scale(1.4)}}
 
 /* train */
-.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:14px 12px 0}
-.seg button{padding:10px 4px;border:1px solid var(--line);border-radius:4px;font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.08em;font-size:13px;background:#07101f;color:var(--muted)}
+.seg{display:flex;gap:6px;padding:14px 12px 0;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:none;padding:10px 12px;border:1px solid var(--line);border-radius:4px;font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.08em;font-size:13px;background:#07101f;color:var(--muted)}
 .seg button.on{border-color:var(--cyan);color:#fff;box-shadow:var(--glow)}
 .breath-wrap{display:grid;place-items:center;margin:8px 0;height:250px;position:relative}
 .orb{width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#c9f3ff,#3fa9ff 40%,#2340a8 70%,#120a3a);
@@ -221,6 +238,23 @@ canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:90}
 .link .ic{width:42px;height:42px;border:1px solid var(--line2);border-radius:4px;display:grid;place-items:center;font-size:20px;flex:none;background:#0b1a36}
 .link b{display:block;font-size:14px}
 .link span{font-size:12px;color:var(--muted)}
+
+.res{font-family:Rajdhani,sans-serif;font-size:18px;color:var(--cyan);margin:14px 0 0;letter-spacing:.06em;text-shadow:0 0 8px #3fa9ff88}
+.rt{height:210px;border-radius:6px;display:grid;place-items:center;font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;letter-spacing:.1em;user-select:none;-webkit-user-select:none;cursor:pointer;border:1px solid var(--line2);margin-top:12px;touch-action:manipulation}
+.rt.wait{background:#1a0a14;color:#ff8aa0}
+.rt.go{background:#3fa9ff;color:#03050b;box-shadow:0 0 40px #3fa9ff}
+.rt.early{background:#3a0f1c}
+.rt.show{background:#0b1a36;color:var(--cyan)}
+.bignum{font-family:Rajdhani,sans-serif;font-size:44px;font-weight:700;letter-spacing:.15em;margin:26px 0 12px;word-break:break-all;color:#eaf6ff;text-shadow:0 0 12px #3fa9ff}
+.wgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:12px 0}
+.wgrid span,.wgrid button{padding:11px 8px;border:1px solid var(--line2);border-radius:4px;background:#07101f;font-weight:700;font-size:15px}
+.wgrid button.on{border-color:var(--cyan);box-shadow:var(--glow);background:#0b1a36}
+.wgrid .right,.pgrid .right{background:#0d3b2e!important;border-color:var(--ok)!important}
+.wgrid .wrong,.pgrid .wrong{background:#3a0f1c!important;border-color:var(--red)!important}
+.wgrid .missed{border-color:var(--gold)!important;border-style:dashed!important}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:300px;margin:12px auto}
+.pgrid span,.pgrid button{aspect-ratio:1;display:grid;place-items:center;font-size:40px;border:1px solid var(--line2);border-radius:6px;background:#07101f}
+.pgrid button{font-family:Rajdhani,sans-serif;font-size:24px;color:var(--muted)}
 
 /* profile */
 .status{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
@@ -291,9 +325,9 @@ canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:90}
     <!-- HOME -->
     <section class="view" data-view="home">
       <div class="stories" id="stories"></div>
+      <div class="card hero" id="scoreCard"></div>
       <div class="sys" id="dailyPanel"></div>
       <div class="sys" id="challengeCard"></div>
-      <div class="card" id="scoreCard"></div>
       <div class="section-title">My quests <a data-go="quests">See all ›</a></div>
       <div class="card" style="padding:4px 14px" id="todayList"></div>
       <div class="section-title">Activity feed</div>
@@ -322,8 +356,12 @@ canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:90}
     <section class="view hidden" data-view="train">
       <div class="seg" id="seg">
         <button data-tp="med" class="on">🧘 Meditate</button>
-        <button data-tp="mem">🧩 Memory</button>
+        <button data-tp="mem">🧩 Visual</button>
         <button data-tp="pat">🔷 Patterns</button>
+        <button data-tp="react">⚡ Reaction</button>
+        <button data-tp="num">🔢 Numbers</button>
+        <button data-tp="word">📝 Words</button>
+        <button data-tp="pic">🖼️ Pictures</button>
         <button data-tp="web">🌐 Websites</button>
       </div>
 
@@ -456,6 +494,10 @@ const STEPS = [
     o:[["Under 5 hours",4.5],["5–6 hours",5.5],["6–7 hours",6.5],["7–8 hours",7.5],["More than 8 hours",8.5]]},
   {k:"exercise", e:"🏃", q:"How many days a week do you move or exercise?", s:"Walking counts!",
     o:[["Almost never",0],["1–2 days",1.5],["3–4 days",3.5],["5 or more days",5.5]]},
+  {k:"pushMax", e:"💪", q:"How many push-ups can you do in a row?", s:"Full push-ups with good form, no stopping. Be honest: 0 or 1 is completely fine, you'll start with easier versions.",
+    o:[["None yet",0],["1–2",1],["3–5",4],["6–15",10],["16–30",22],["31–50",40],["More than 50",60]]},
+  {k:"pullMax", e:"🧗", q:"How many pull-ups can you do in a row?", s:"Hanging from a bar, chin over the bar.",
+    o:[["None yet",0],["1–3",2],["4–8",6],["9–15",12],["More than 15",18]]},
   {k:"stress", e:"🌪️", q:"How stressed have you felt lately?", s:"Be honest, only you see this.",
     o:[["Pretty calm",2],["Some stress",5],["A lot of stress",7.5],["Completely overwhelmed",9.5]]},
   {k:"mood", e:"💭", q:"How has your mood been this week?", s:"",
@@ -468,6 +510,11 @@ const STEPS = [
     o:[["0–2 hours",1],["2–5 hours",3.5],["5–10 hours",7.5],["More than 10 hours",12]]},
   {k:"confidence", e:"💡", q:"How confident do you feel about your Ausbildung?", s:"Exams, Praxis, theory: overall.",
     o:[["😰 I'm struggling",2],["😐 It's okay",5],["🙂 Pretty good",7],["😎 Very confident",9]]},
+  {k:"trial"},
+  {k:"t", test:"react"},
+  {k:"t", test:"num"},
+  {k:"t", test:"word"},
+  {k:"t", test:"pic"},
   {k:"analyse"},
   {k:"result"}
 ];
@@ -490,7 +537,7 @@ function timeAgo(ts){ const s=(Date.now()-ts)/1000; if(s<60) return "just now"; 
 function fresh(){
   return { v:3, profile:null, base:null, xp:0, streak:0, best:0, lastActive:null, doneDay:todayKey(), doneToday:0,
     quests:[], feed:[], areaXP:{body:0,mind:0,focus:0,pflege:0}, counts:{quests:0,body:0,mind:0,focus:0,pflege:0,cleared:0},
-    med:{days:[], total:0, best:0}, sys:null, rec:{mem:0,pat:0}, badges:[], settings:{sound:true,haptics:true} };
+    med:{days:[], total:0, best:0}, sys:null, rec:{mem:0,pat:0,react:0,num:0,word:0,pic:0}, lastG:{}, adj:{push:1,pull:1,squat:1}, badges:[], settings:{sound:true,haptics:true} };
 }
 let S = fresh();
 
@@ -537,9 +584,17 @@ document.addEventListener("pointerdown",()=>ac(),{once:true});
 document.addEventListener("click",e=>{ if(e.target.closest("button,.mini,a")){ SFX.tap(); haptic(8); } },true);
 
 // ================= scoring =================
-function baseScores(a){
+function cogScore(t){
+  t=t||{}; const has=v=>v!==null&&v!==undefined;
+  const parts=[ has(t.react)?clamp(100-(t.react-200)*.32):50, has(t.num)?clamp((t.num-2)*12.5):50,
+                has(t.word)?clamp(t.word*10):50, has(t.pic)?clamp(t.pic/6*100):50 ];
+  return parts.reduce((a,b)=>a+b,0)/4;
+}
+function baseScores(a,t){
   const sleep=100-Math.abs(7.75-a.sleep)*28, ex=a.exercise/5*100, foc=a.focusMin/40*100, scr=100-(a.screen-1.5)*15;
-  return { body:clamp(sleep*.55+ex*.45), mind:clamp(((10-a.stress)/8.5*100)*.5+((a.mood-1)/4*100)*.5),
+  const strength=Math.min(100,(a.pushMax||0)/40*60+(a.pullMax||0)/12*40);
+  const emo=((10-a.stress)/8.5*100)*.5+((a.mood-1)/4*100)*.5;
+  return { body:clamp(sleep*.35+ex*.3+strength*.35), mind:clamp(emo*.45+cogScore(t)*.55),
            focus:clamp(foc*.6+scr*.4), pflege:clamp((a.study/10*100)*.5+((a.confidence-1)/8*100)*.5) };
 }
 const potOf = b => Math.min(98, Math.round(b+(100-b)*.7));
@@ -548,7 +603,7 @@ const avg = o => Math.round(Object.values(o).reduce((a,b)=>a+b,0)/Object.values(
 function scores(){ const now={},pot={}; for(const k in AREAS){ now[k]=areaNow(k); pot[k]=potOf(S.base[k]); } return {now,pot,nowAll:avg(now),potAll:avg(pot),startAll:avg(S.base)}; }
 const TIPS = {
   body:"Your body is your biggest lever. More sleep, daily movement and your push-up / pull-up quests will raise energy, mood and focus at the same time.",
-  mind:"Your stress load is high. Breathwork, memory games and small mind quests are built to calm and sharpen your mind.",
+  mind:"Your mind stat (mood, stress and memory) has the most room to grow. Daily brain tests, breathwork and small mind quests train memory and calm your mind.",
   focus:"Focus is where you can grow the most. The growing meditation session plus phone-free work blocks train attention like a muscle.",
   pflege:"Your Ausbildung needs more regular study time. Short daily Pflege quests beat cramming before exams."
 };
@@ -576,17 +631,18 @@ function medPlan(){
 // ================= daily system quests =================
 function genDaily(){
   const L=levelInfo(S.xp).lvl, t=(lv,a,b)=>Math.round(a+(Math.min(lv,100)-1)*(b-a)/99);
-  const push=t(L,10,100), pull=Math.max(1,t(L,1,20)), squat=t(L,15,100);
+  const A=(S.profile&&S.profile.answers)||{}, T=(S.profile&&S.profile.tests)||{};
+
   const memT=Math.min(14,3+Math.floor(L/8)), patT=Math.min(10,5+Math.floor(L/15));
   const work=t(L,15,90), study=t(L,15,90), words=Math.min(30,5+Math.floor(L/4));
   const dayIdx=dayDiff("2026-01-01",todayKey()), web=WEB[((dayIdx%WEB.length)+WEB.length)%WEB.length];
   const plan=medPlan();
   const items=[
-    {area:"body", kind:"rep", n:"Push-ups", tgt:push+"×", hint:"Split into sets. Knee push-ups are fine to start."},
-    {area:"body", kind:"rep", n:"Pull-ups", tgt:pull+"×", hint:"Can't do one yet? Do slow negatives or a 20 s dead hang instead."},
-    {area:"body", kind:"rep", n:"Squats", tgt:squat+"×", hint:""},
-    {area:"mind", kind:"mem", n:"Visual Memory: clear level", tgt:memT, hint:"In-app memory game", play:"mem"},
-    {area:"mind", kind:"pat", n:"Pattern Recognition: score", tgt:patT+"/10", val:patT, hint:"In-app pattern game", play:"pat"},
+    Object.assign({area:"body", kind:"rep", ex:"push"}, bodyItem("push",L)),
+    Object.assign({area:"body", kind:"rep", ex:"pull"}, bodyItem("pull",L)),
+    Object.assign({area:"body", kind:"rep", ex:"squat"}, bodyItem("squat",L)),
+    {area:"mind", kind:"mem", n:"Visual Memory: clear level", tgt:memT, val:memT, hint:"In-app memory game", play:"mem"},
+    rotQuest(L, dayIdx, patT, T),
     {area:"mind", kind:"web", n:"Human Benchmark: "+web.n, tgt:"", hint:web.d, url:web.url},
     {area:"focus",kind:"med", n:"Breathe + meditate", tgt:plan.mins+" min", hint:"Your 10-day challenge session", play:"med"},
     {area:"focus",kind:"rep", n:"Phone-free deep work", tgt:work+" min", hint:"Phone in another room, one task only."},
@@ -595,6 +651,33 @@ function genDaily(){
   ].map(q=>Object.assign({id:uid(), done:false, xp:q.kind==="med"?60:20}, q));
   if(plan.doneToday) items.find(q=>q.kind==="med").done=true;
   return {day:todayKey(), lvl:L, items, cleared:false};
+}
+// Body quests: beginners start with easier versions and move up as they level.
+function bodyItem(ex,L){
+  const A=(S.profile&&S.profile.answers)||{}, adj=(S.adj&&S.adj[ex])||1, f=Math.pow((Math.min(L,100)-1)/99,2);  // slow start, faster later
+  if(ex==="push"){
+    const m=A.pushMax!==undefined?A.pushMax:8, st=m===0?2:m<=1?3:m<=4?6:Math.min(60,Math.round(m*1.2)), P=(st+(100-st)*f)*adj;
+    if(P<4)  return {n:"Wall push-ups", tgt:Math.round(10+P*3)+"×", hint:"Hands on a wall, body straight. Split into small sets."};
+    if(P<8)  return {n:"Incline push-ups", tgt:Math.round(8+P*1.5)+"×", hint:"Hands on a table, bed or stairs. Split into small sets."};
+    if(P<15) return {n:"Knee push-ups", tgt:Math.round(P*1.3)+"×", hint:"Knees down, straight line from knees to head."};
+    return {n:"Push-ups", tgt:Math.round(P)+"×", hint:"Split into sets across the day."};
+  }
+  if(ex==="pull"){
+    const m=A.pullMax!==undefined?A.pullMax:1, Q=(m+(20-m)*f)*adj;
+    if(Q<1) return {n:"Dead hang", tgt:Math.round(15+Q*25)+" s", hint:"Hang from a bar with straight arms. Builds grip for pull-ups."};
+    if(Q<3) return {n:"Pull-up negatives", tgt:Math.round(3+Q*2)+"×", hint:"Step up so your chin is over the bar, then lower yourself as slowly as you can."};
+    return {n:"Pull-ups", tgt:Math.round(Q)+"×", hint:"Split into sets. A resistance band can help."};
+  }
+  return {n:"Squats", tgt:Math.round((15+85*f)*adj)+"×", hint:"Hold a chair for balance if needed."};
+}
+function rotQuest(L, dayIdx, patT, T){
+  const kind=["pat","react","num","word","pic"][((dayIdx%5)+5)%5];
+  const base={area:"mind", kind, play:kind, rot:true, hint:"In-app brain test"};
+  if(kind==="pat")   return Object.assign(base,{n:"Pattern Recognition: score", tgt:patT+"/10", val:patT});
+  if(kind==="react"){ const v=Math.max(220,(T.react||350)+20-L*2); return Object.assign(base,{n:"Reaction Time: average under", tgt:v+" ms", val:v, lower:true}); }
+  if(kind==="num"){ const v=Math.min(15,(T.num||5)+Math.floor(L/12)); return Object.assign(base,{n:"Number Memory: remember", tgt:v+" digits", val:v}); }
+  if(kind==="word"){ const v=Math.min(10,(T.word||5)+Math.floor(L/20)); return Object.assign(base,{n:"Word Memory: score", tgt:v+"/10", val:v}); }
+  const v=Math.min(6,(T.pic||3)+Math.floor(L/20)); return Object.assign(base,{n:"Picture Memory: score", tgt:v+"/6", val:v});
 }
 function completeSys(id, el, auto){
   const q=S.sys.items.find(x=>x.id===id); if(!q) return;
@@ -611,7 +694,7 @@ function completeSys(id, el, auto){
 }
 function autoSys(kind, value){
   if(!S.sys) return;
-  S.sys.items.filter(q=>q.kind===kind && !q.done && value >= (q.val!==undefined?q.val:q.tgt)).forEach(q=>completeSys(q.id,null,true));
+  S.sys.items.filter(q=>q.kind===kind && !q.done && (q.lower ? value <= q.val : value >= (q.val!==undefined?q.val:q.tgt))).forEach(q=>completeSys(q.id,null,true));
 }
 
 // ================= rollover =================
@@ -634,7 +717,7 @@ function save(){ lsSet(); clearTimeout(saveT);
   saveT=setTimeout(async()=>{ if(!ref) return; try{ await ref.set({json:JSON.stringify(S), updated:Date.now()}); }catch(e){} },700); }
 function load(o){
   const f=fresh(); S=Object.assign(f,o); S.v=3;
-  ["areaXP","counts","med","rec","settings"].forEach(k=>S[k]=Object.assign(f[k],o[k]||{}));
+  ["areaXP","counts","med","rec","settings","lastG","adj"].forEach(k=>S[k]=Object.assign(f[k],o[k]||{}));
   if(o.v!==3) S.sys=null;
   rollover();
 }
@@ -670,7 +753,7 @@ function start(){
 // ================= onboarding =================
 let step=0, draft=null, typing=null;
 function openOnboarding(keep){
-  draft = keep&&S.profile ? {name:S.profile.name,avatar:S.profile.avatar,a:Object.assign({},S.profile.answers)} : {name:"",avatar:"🗡️",a:{}};
+  draft = keep&&S.profile ? {name:S.profile.name,avatar:S.profile.avatar,a:Object.assign({},S.profile.answers),t:Object.assign({},S.profile.tests||{})} : {name:"",avatar:"🗡️",a:{},t:{}};
   step = keep?1:0; $("main").classList.add("hidden"); $("ob").classList.remove("hidden"); renderStep();
 }
 function typeLines(el, lines, done){
@@ -704,6 +787,23 @@ function renderStep(){
       <input class="txt" id="obName" maxlength="24" placeholder="Your name" value="${esc(draft.name)}" autocomplete="off">
       <div class="avatars">${AVATARS.map(a=>`<button class="av ${a===draft.avatar?"on":""}" data-av="${a}">${a}</button>`).join("")}</div>
       <div style="flex:1"></div><button class="cta" data-next ${draft.name.trim()?"":"disabled"} id="obNext">Continue</button></div>`;
+  } else if(st.k==="trial"){
+    html=`${bars}<div class="ob-body" style="justify-content:center"><div class="sys"><div class="sys-h"><span>SYSTEM TRIAL</span></div>
+      <div class="r glowtxt" style="font-size:20px;line-height:1.5">Four short trials will now measure your mind.</div>
+      <div class="kv"><div><span>⚡ TRIAL 1</span><b style="font-size:16px">Reaction time</b></div><div><span>🔢 TRIAL 2</span><b style="font-size:16px">Number memory</b></div>
+        <div><span>📝 TRIAL 3</span><b style="font-size:16px">Word memory</b></div><div><span>🖼️ TRIAL 4</span><b style="font-size:16px">Picture memory</b></div></div>
+      <p class="small muted" style="margin:12px 0 0">About 4 minutes. You can skip any trial.</p>
+      <button class="cta" data-next>Begin trial</button></div><button class="back" data-back>Back</button></div>`;
+    SFX.system(); haptic([30,50,30]);
+  } else if(st.k==="t"){
+    const g=GAMES[st.test], ti=STEPS.slice(0,step+1).filter(x=>x.test).length;
+    html=`${bars}<div class="ob-body"><div class="sys-h" style="justify-content:flex-start"><span>TRIAL ${ti}/4 · ${g.t}</span></div>
+      <div class="ob-emoji">${g.e}</div><p class="ob-sub" style="margin-bottom:4px">${g.d}</p>
+      <div id="tArea" style="text-align:center"></div><div style="flex:1"></div><button class="back" data-skip>Skip this trial</button></div>`;
+    ob.innerHTML=html;
+    g.fn($("tArea"), v=>{ draft.t[st.test]=v; const a=$("tArea"); if(a) a.innerHTML=`<div class="res">Result: ${g.fmt(v)}</div>`; SFX.system();
+      setTimeout(()=>{ if(STEPS[step]===st){ step++; renderStep(); } },1500); });
+    return;
   } else if(st.k==="analyse"){
     html=`<div class="scan"><div><div class="ring-spin"></div><div class="r glowtxt" style="font-size:22px;letter-spacing:.2em">ANALYSING PLAYER</div>
       <p class="ob-sub r" id="anTxt" style="letter-spacing:.14em;margin-top:8px">Reading physical condition…</p></div></div>`;
@@ -719,6 +819,7 @@ function renderStep(){
       <div class="gauge">${gaugeSVG(190,10,0,"rg")}<div class="lbl"><div><small>HIDDEN POTENTIAL</small><b class="glowtxt" id="gNum">0</b><small>/ 100</small></div></div></div>
       <div class="pot-row"><div class="pot"><b>${sc.startAll}</b><span>Current power</span></div><div class="pot"><b class="glowtxt">+${sc.potAll-sc.startAll}</b><span>Locked potential</span></div></div>
       <div class="areas">${areaRows(S.base,sc.pot,true)}</div></div>
+      ${trialPanel()}
       <div class="insight"><b>⚠️ Weakest stat: ${AREAS[low].stat} (${AREAS[low].label})</b>${TIPS[low]}</div>
       <div class="insight"><b>💎 Strongest stat: ${AREAS[high].stat} (${AREAS[high].label})</b>${STRONG[high]}</div>
       <div class="insight"><b>📜 First mission</b>Complete the focus session 10 days in a row. It starts at 7 minutes and grows to 17.</div>
@@ -726,7 +827,8 @@ function renderStep(){
       <button class="cta" data-finish>Enter the System</button></div>`;
     setTimeout(()=>animateGauge(sc.potAll),200);
   } else {
-    html=`${bars}<div class="ob-body"><div class="sys-h" style="justify-content:flex-start"><span>ASSESSMENT ${step-1}/${STEPS.length-4}</span></div>
+    const qi=STEPS.slice(0,step+1).filter(x=>x.o).length, qT=STEPS.filter(x=>x.o).length;
+    html=`${bars}<div class="ob-body"><div class="sys-h" style="justify-content:flex-start"><span>ASSESSMENT ${qi}/${qT}</span></div>
       <div class="ob-emoji">${st.e}</div><p class="ob-q">${st.q}</p><p class="ob-sub">${st.s||"&nbsp;"}</p>
       <div class="opts">${st.o.map(([l,v])=>`<button class="opt ${draft.a[st.k]===v?"on":""}" data-val="${v}">${l}</button>`).join("")}</div>
       <div style="flex:1"></div><button class="back" data-back>Back</button></div>`;
@@ -739,17 +841,31 @@ $("ob").addEventListener("click",e=>{
   if(t.id==="decline"){ SFX.error(); haptic([80,50,80]); typeLines($("typer"),["[SYSTEM]","","Declining is not possible.","Your journey has already begun."],()=>{ $("decline").remove(); }); return; }
   if(t.dataset.av){ draft.avatar=t.dataset.av; document.querySelectorAll(".av").forEach(b=>b.classList.toggle("on",b===t)); return; }
   if(t.hasAttribute("data-next")){ clearInterval(typing); step++; renderStep(); return; }
-  if(t.hasAttribute("data-back")){ step=Math.max(1,step-1); renderStep(); return; }
+  if(t.hasAttribute("data-back")){ step=Math.max(1,step-1); while(step>1 && STEPS[step].k==="t") step--; renderStep(); return; }
+  if(t.hasAttribute("data-skip")){ draft.t[STEPS[step].test]=null; step++; renderStep(); return; }
   if(t.dataset.val!==undefined){ draft.a[STEPS[step].k]=Number(t.dataset.val); t.classList.add("on"); setTimeout(()=>{ step++; renderStep(); },200); return; }
   if(t.hasAttribute("data-finish")){ $("ob").classList.add("hidden"); $("main").classList.remove("hidden"); go("home"); renderAll(); shards(); SFX.system(); }
 });
 document.addEventListener("keydown",e=>{ if(e.key==="Enter" && e.target.id==="obName" && draft.name.trim()){ step++; renderStep(); } });
 function finishAssessment(){
   const first=!S.profile;
-  S.profile={name:draft.name.trim(),avatar:draft.avatar,answers:draft.a,year:draft.a.year,created:S.profile?S.profile.created:Date.now()};
-  S.base=baseScores(draft.a);
+  S.profile={name:draft.name.trim(),avatar:draft.avatar,answers:draft.a,tests:draft.t,year:draft.a.year,created:S.profile?S.profile.created:Date.now()};
+  S.base=baseScores(draft.a,draft.t);
+  for(const k in GAMES){ const v=draft.t[k]; if(v===null||v===undefined) continue;
+    if(GAMES[k].lower){ if(!S.rec[k]||v<S.rec[k]) S.rec[k]=v; } else S.rec[k]=Math.max(S.rec[k]||0,v); }
+  if(first) S.sys=null;
   if(first) post({type:"welcome",e:"👁️",k:"AWAKENING",text:`${S.profile.name} became a Player`,grad:"linear-gradient(160deg,#02040c,#0b1d45 55%,#3fa9ff)"});
   rollover(); save();
+}
+
+function optLabel(k,v){ const st=STEPS.find(x=>x.k===k); if(!st||v===undefined) return "–"; const o=st.o.find(x=>x[1]===v); return o?o[0]:"–"; }
+function trialPanel(){
+  const T=S.profile.tests||{}, A=S.profile.answers||{}, f=(k,v)=>v===null||v===undefined?'<span class="muted">skipped</span>':GAMES[k].fmt(v);
+  return `<div class="sys" style="margin:12px 0 0"><div class="sys-h"><span>TRIAL RESULTS</span></div><div class="kv" style="margin-top:0">
+    <div><span>💪 PUSH-UPS</span><b style="font-size:16px">${optLabel("pushMax",A.pushMax)}</b></div><div><span>🧗 PULL-UPS</span><b style="font-size:16px">${optLabel("pullMax",A.pullMax)}</b></div>
+    <div><span>⚡ REACTION</span><b>${f("react",T.react)}</b></div><div><span>🔢 NUMBERS</span><b>${f("num",T.num)}</b></div>
+    <div><span>📝 WORDS</span><b>${f("word",T.word)}</b></div><div><span>🖼️ PICTURES</span><b>${f("pic",T.pic)}</b></div></div>
+    <div class="small muted" style="margin-top:10px">For comparison: most adults react in about 250–300 ms and can hold about 7 digits.</div></div>`;
 }
 
 // ================= gauges =================
@@ -807,6 +923,8 @@ const BADGES = [
   ["m10","🎯","Focus Master",()=>S.med.best>=10],
   ["mem8","🧩","Memory lv 8",()=>S.rec.mem>=8],
   ["pat10","🔷","Perfect 10/10",()=>S.rec.pat>=10],
+  ["rt250","⚡","Lightning reflexes",()=>S.rec.react>0&&S.rec.react<=250],
+  ["num9","🔢","Number wizard",()=>S.rec.num>=9],
   ["rD","🟢","D-Rank",()=>levelInfo(S.xp).lvl>=10],
   ["rB","🟣","B-Rank",()=>levelInfo(S.xp).lvl>=45],
   ["rS","🔴","S-Rank",()=>levelInfo(S.xp).lvl>=85],
@@ -830,42 +948,50 @@ function renderAll(){
   // stories
   const st=[`<button class="story" data-go="add"><div class="ring seen"><div><div>${S.profile.avatar}<span class="plus">+</span></div></div></div><span>New quest</span></button>`,
     `<button class="story" data-train="med"><div class="ring ${plan.doneToday?"seen":""}"><div><div>🧘</div></div></div><span>${plan.doneToday?"Done ✓":plan.mins+" min focus"}</span></button>`,
-    `<button class="story" data-train="mem"><div class="ring ${S.sys.items.find(q=>q.kind==="mem").done?"seen":""}"><div><div>🧩</div></div></div><span>Memory</span></button>`,
-    `<button class="story" data-train="pat"><div class="ring ${S.sys.items.find(q=>q.kind==="pat").done?"seen":""}"><div><div>🔷</div></div></div><span>Patterns</span></button>`];
+    `<button class="story" data-train="mem"><div class="ring ${(S.sys.items.find(q=>q.kind==="mem")||{done:true}).done?"seen":""}"><div><div>🧩</div></div></div><span>Visual</span></button>`];
+  const rq=S.sys.items.find(q=>q.rot), RE={pat:["🔷","Patterns"],react:["⚡","Reaction"],num:["🔢","Numbers"],word:["📝","Words"],pic:["🖼️","Pictures"]};
+  if(rq) st.push(`<button class="story" data-train="${rq.kind}"><div class="ring ${rq.done?"seen":""}"><div><div>${RE[rq.kind][0]}</div></div></div><span>${RE[rq.kind][1]}</span></button>`);
   for(const k in AREAS) st.push(`<button class="story" data-area="${k}"><div class="ring seen"><div><div>${AREAS[k].emoji}</div></div></div><span>${AREAS[k].stat} ${sc.now[k]}</span></button>`);
   $("stories").innerHTML=st.join("");
 
   // daily quest panel
   const items=S.sys.items, done=items.filter(q=>q.done).length;
-  let dq=`<div class="sys-h"><span>DAILY QUEST</span></div><div class="dq-goal">TRAINING TO BECOME STRONGER · LV ${S.sys.lvl}</div>`;
+  if(openArea===undefined) openArea=Object.keys(AREAS).find(k=>items.some(q=>q.area===k&&!q.done))||null;
+  let dq=`<div class="sys-h"><span>DAILY QUEST</span></div><div class="dq-goal">TRAINING TO BECOME STRONGER · LV ${S.sys.lvl}</div>
+    <div class="prog" style="margin:0 0 6px"><i style="width:${done/items.length*100}%"></i></div>`;
   for(const k in AREAS){
-    dq+=`<div class="dq-area" style="color:${AREAS[k].color}">${AREAS[k].emoji} ${AREAS[k].stat} · ${AREAS[k].label.toUpperCase()}</div>`;
-    items.filter(q=>q.area===k).forEach(q=>{
+    const its=items.filter(q=>q.area===k), dn=its.filter(q=>q.done).length, op=openArea===k;
+    dq+=`<button class="acc ${op?"open":""}" data-acc="${k}"><span style="font-size:18px">${AREAS[k].emoji}</span><span class="lab" style="color:${AREAS[k].color}">${AREAS[k].stat} · ${AREAS[k].label.toUpperCase()}</span>
+      <span class="cnt ${dn===its.length?"full":""}">${dn===its.length?"✓ ":""}${dn}/${its.length}</span><span class="chev">▶</span></button>`;
+    if(!op) continue;
+    dq+=`<div class="acc-body">`;
+    its.forEach(q=>{
       const right = q.kind==="web" ? `<a class="mini" href="${q.url}" target="_blank" rel="noopener">OPEN ↗</a>` :
                     q.play ? (q.done?"":`<button class="mini" data-train="${q.play}">${q.kind==="med"?"START":"PLAY"}</button>`) : "";
       const manual = q.kind==="rep"||q.kind==="web";
       dq+=`<div class="dq ${q.done?"done":""}">${manual?`<button class="box" data-sys="${q.id}" aria-label="Done">${q.done?"✓":""}</button>`:`<span class="box">${q.done?"✓":""}</span>`}
-        <div class="n">${esc(q.n)}${q.hint?`<small>${esc(q.hint)}</small>`:""}</div><span class="tgt">${q.tgt}</span>${right}</div>`;
+        <div class="n">${esc(q.n)}${q.hint&&!q.done?`<small>${esc(q.hint)}</small>`:""}${q.ex&&!q.done?`<div class="adj"><button data-adj="${q.id}" data-d="-1">⬇ Easier</button><button data-adj="${q.id}" data-d="1">⬆ Harder</button></div>`:""}</div><span class="tgt">${q.tgt}</span>${right}</div>`;
     });
+    dq+=`</div>`;
   }
-  dq+=`<div class="prog"><i style="width:${done/items.length*100}%"></i></div>
-    <div class="dq-foot"><span>${done}/${items.length} complete</span><span>${S.sys.cleared?"✓ Reward claimed":"Clear all: <b style='color:var(--gold)'>+100 XP</b>"}</span></div>
-    <div class="warn">At level 100: 100 push-ups, 20 pull-ups and 100 squats a day. Targets grow a little every level. Listen to your body and skip anything that hurts.</div>`;
+  dq+=`<div class="dq-foot"><span>${done}/${items.length} complete</span><span>${S.sys.cleared?"✓ Reward claimed":"Clear all: <b style='color:var(--gold)'>+100 XP</b>"}</span></div>
+    <div class="warn">🎯 Level 100 goal: 100 push-ups · 20 pull-ups · 100 squats a day. Use Easier / Harder anytime and skip anything that hurts.</div>`;
   $("dailyPanel").innerHTML=dq;
 
   // challenge
   const prog=Math.min(10,plan.ms);
   $("challengeCard").innerHTML=`<div class="sys-h"><span>10-DAY FOCUS CHALLENGE</span></div>
     <div style="font-size:18px;font-weight:800">${prog>=10?"Challenge complete 🏆":plan.doneToday?`Day ${prog} cleared. Return tomorrow.`:`Day ${Math.min(10,prog+1)}: ${plan.mins}-minute session`}</div>
-    <div class="small muted" style="margin-top:4px">Starts at 7 min and grows to 17 min of breathwork + meditation.</div>
     ${dotsHTML(prog, !plan.doneToday)}
     <div class="row" style="margin-top:0"><button class="btn p" data-train="med">${plan.doneToday?"Extra session":"▶ Begin session"}</button></div>`;
 
   // score
-  $("scoreCard").innerHTML=`<div class="score-row"><div class="mini-gauge">${gaugeSVG(76,7,sc.nowAll,"mg")}<b class="glowtxt">${sc.nowAll}</b></div>
-    <div><div style="font-weight:800;font-size:16px">Power level</div><div class="muted small">Started at ${sc.startAll} · potential <b style="color:var(--cyan)">${sc.potAll}</b></div>
-    <div class="small" style="margin-top:4px;font-weight:700">${sc.potAll-sc.nowAll>0?`${sc.potAll-sc.nowAll} points of potential still locked`:"Full potential unlocked 👑"}</div></div></div>
-    <div class="areas">${areaRows(sc.now,sc.pot)}</div>`;
+  $("scoreCard").innerHTML=`<div class="av-b"><div>${S.profile.avatar}</div></div>
+    <div><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px">${esc(S.profile.name)}</b>
+      <span class="r small" style="letter-spacing:.12em"><b style="color:${RANK_COL[rk]}">${rk}-RANK</b> · LV ${L.lvl}</span></div>
+      <div class="xpbar"><i style="width:${L.into/L.need*100}%"></i></div><div class="r small muted" style="letter-spacing:.1em">EXP ${L.into}/${L.need}</div></div>
+    <div class="hero-stats"><div><b class="glowtxt">${sc.nowAll}<span style="font-size:12px;color:var(--muted)">/${sc.potAll}</span></b><span>POWER</span></div>
+      <div><b>${S.streak}🔥</b><span>STREAK</span></div><div><b>${S.doneDay===todayKey()?S.doneToday+done:done}✓</b><span>DONE TODAY</span></div></div>`;
 
   // own quests
   const open=S.quests.filter(q=>!q.done).slice(0,4);
@@ -887,7 +1013,7 @@ function questRow(q){ const a=AREAS[q.cat];
     <span class="tag" style="color:${a.color}">${a.stat} +${SIZES[q.size].xp}</span><button class="x" data-act="del" aria-label="Delete">×</button></div>`; }
 
 // ---- quests view ----
-let fCat="body", fSize="tiny", fDaily=false, filter="all";
+let fCat="body", fSize="tiny", fDaily=false, filter="all", openArea;
 function renderQuests(){
   $("catChips").innerHTML=Object.entries(AREAS).map(([k,a])=>`<button type="button" class="chip ${k===fCat?"on":""}" data-cat="${k}">${a.emoji} ${a.stat} · ${a.label}</button>`).join("");
   $("ideas").innerHTML=IDEAS[fCat].map(t=>`<button type="button" class="chip idea" data-idea="${esc(t)}">${esc(t)}</button>`).join("");
@@ -924,6 +1050,7 @@ function renderTrainStatic(){
     plan.doneToday?`Today cleared ✓ ${10-prog} day${10-prog===1?"":"s"} to go. Best: ${S.med.best}`:
     plan.ms>0?`Keep your ${plan.ms}-day streak alive. Today: ${plan.mins} min.`:"Missing a day restarts the challenge at 7 min.";
   $("memBest").textContent=S.rec.mem; $("patBest").textContent=S.rec.pat;
+  for(const k in GAMES){ const b=$("best_"+k), l=$("last_"+k); if(b) b.textContent=S.rec[k]?GAMES[k].fmt(S.rec[k]):"–"; if(l) l.textContent=S.lastG[k]!==undefined?GAMES[k].fmt(S.lastG[k]):"–"; }
   $("webList").innerHTML=WEB.map(w=>`<a class="link" href="${w.url}" target="_blank" rel="noopener"><span class="ic">${w.e}</span><div style="flex:1"><b>${w.n}</b><span>${w.d}</span></div><span class="mini">OPEN ↗</span></a>`).join("")+
     `<div class="small muted" style="margin-top:10px">Today's website quest: <b style="color:var(--text)">${esc(S.sys.items.find(q=>q.kind==="web").n.replace("Human Benchmark: ",""))}</b>. Tick it off on the home screen when you're done.</div>`;
 }
@@ -1067,10 +1194,121 @@ function patEnd(){
 }
 $("patStart").addEventListener("click",patStart);
 
+// ---- brain tests (used in the survey and in Train) ----
+const W_POOL=["apple","river","candle","mirror","garden","rocket","pillow","violin","castle","pencil","tiger","window","ocean","basket","engine","forest","hammer","jacket","lemon","marble","needle","orange","planet","rabbit","saddle","tunnel","wallet","yogurt","bridge","cookie","dragon","feather","guitar","island","ladder","magnet","pepper","shield","throne","wagon"];
+const P_POOL=["🍎","🚗","🐶","⚽","🎸","🌵","🔑","🎈","🐟","🍕","🚀","🌙","☂️","🧲","🦋","🍩","📚","🕰️"];
+function startScreen(el,msg,label,go){
+  el.innerHTML=`${msg?`<div class="res">${msg}</div>`:""}<div class="row"><button class="btn p sgo">${label}</button></div>`;
+  el.querySelector(".sgo").onclick=go;
+}
+function countdown(el,cls,ms,onEnd){
+  const bar=el.querySelector("."+cls), t0=Date.now();
+  const iv=setInterval(()=>{ if(!el.isConnected){ clearInterval(iv); return; } const p=1-(Date.now()-t0)/ms; if(bar) bar.style.width=Math.max(0,p*100)+"%"; if(p<=0){ clearInterval(iv); onEnd(); } },80);
+  return ()=>clearInterval(iv);
+}
+function gameReaction(el,done,msg){
+  startScreen(el,msg,msg?"Play again":"Start",()=>{
+    const times=[]; let state, t0, timer;
+    el.innerHTML=`<div class="rt">Wait for blue…</div><div class="small muted rinfo" style="margin-top:8px">Round 1 of 5</div>`;
+    const box=el.querySelector(".rt"), info=el.querySelector(".rinfo");
+    const arm=()=>{ state="wait"; box.className="rt wait"; box.textContent="Wait for blue…";
+      timer=setTimeout(()=>{ if(!box.isConnected) return; state="go"; box.className="rt go"; box.textContent="TAP!"; t0=performance.now(); }, 1300+Math.random()*2700); };
+    box.addEventListener("pointerdown",e=>{ e.preventDefault();
+      if(state==="wait"){ clearTimeout(timer); SFX.error(); haptic(60); state="early"; box.className="rt early"; box.textContent="Too soon! Tap to retry"; return; }
+      if(state==="early"){ arm(); return; }
+      if(state==="go"){ const ms=Math.round(performance.now()-t0); times.push(ms); SFX.hit(); haptic(12); state="show"; box.className="rt show"; box.textContent=ms+" ms";
+        if(times.length>=5){ const avg=Math.round(times.reduce((a,b)=>a+b,0)/5); info.textContent="Average: "+avg+" ms"; setTimeout(()=>done(avg),900); }
+        else { info.textContent=`Round ${times.length+1} of 5`; setTimeout(arm,900); } }
+    });
+    arm();
+  });
+}
+function gameNumber(el,done,msg){
+  startScreen(el,msg,msg?"Play again":"Start",()=>{
+    let d=3;
+    const round=()=>{ let num=String(rnd(1,9)); while(num.length<d) num+=rnd(0,9);
+      el.innerHTML=`<div class="bignum">${num}</div><div class="timer"><i class="nbar" style="width:100%"></i></div><div class="small muted" style="margin-top:8px">${d} digits · memorise!</div>`;
+      countdown(el,"nbar",1000+d*600,()=>ask(num)); };
+    const ask=num=>{
+      el.innerHTML=`<div class="small muted" style="margin-top:14px">What was the number?</div>
+        <input class="txt numin" inputmode="numeric" autocomplete="off" style="text-align:center;font-size:26px;letter-spacing:.2em;margin-top:8px"><div class="row"><button class="btn p nsub">Submit</button></div>`;
+      const inp=el.querySelector(".numin"); inp.focus();
+      const sub=()=>{ const v=inp.value.replace(/\D/g,"");
+        if(v===num){ SFX.quest(); haptic([20,30,20]); d++; if(d>20) return done(20); round(); }
+        else { SFX.error(); haptic(80); el.innerHTML=`<div class="small muted" style="margin-top:14px;line-height:1.8">Number: <b style="color:var(--cyan)">${num}</b><br>You typed: <b style="color:var(--red)">${esc(v||"–")}</b></div>`; setTimeout(()=>done(d-1),1800); } };
+      el.querySelector(".nsub").onclick=sub; inp.addEventListener("keydown",e=>{ if(e.key==="Enter") sub(); }); };
+    round();
+  });
+}
+function gameWords(el,done,msg){
+  startScreen(el,msg,msg?"Play again":"Start",()=>{
+    const pool=shuffle(W_POOL.slice()), shown=pool.slice(0,10), extra=pool.slice(10,16);
+    el.innerHTML=`<div class="small muted" style="margin-top:12px">Memorise these 10 words (25 s)</div><div class="wgrid">${shown.map(w=>`<span>${w}</span>`).join("")}</div>
+      <div class="timer"><i class="wbar" style="width:100%"></i></div><div class="row"><button class="btn s wrdy">I'm ready</button></div>`;
+    let tested=false; const stop=countdown(el,"wbar",25000,()=>test());
+    el.querySelector(".wrdy").onclick=()=>{ stop(); test(); };
+    function test(){ if(tested) return; tested=true; const all=shuffle(shown.concat(extra)), sel=new Set();
+      el.innerHTML=`<div class="small muted" style="margin-top:12px">Tap every word you saw (there are 10)</div><div class="wgrid">${all.map(w=>`<button data-w="${w}">${w}</button>`).join("")}</div><div class="row"><button class="btn p wchk">Check</button></div>`;
+      el.querySelector(".wgrid").onclick=e=>{ const b=e.target.closest("[data-w]"); if(!b) return; const w=b.dataset.w; if(sel.has(w)) sel.delete(w); else sel.add(w); b.classList.toggle("on"); };
+      el.querySelector(".wchk").onclick=()=>{ let hit=0, fa=0;
+        el.querySelectorAll("[data-w]").forEach(b=>{ const w=b.dataset.w, was=shown.includes(w); b.classList.remove("on");
+          if(was) b.classList.add(sel.has(w)?"right":"missed"); else if(sel.has(w)) b.classList.add("wrong");
+          if(sel.has(w)){ if(was) hit++; else fa++; } });
+        const sc=Math.max(0,hit-fa); if(sc>=7) SFX.quest(); else SFX.system(); haptic(30);
+        el.querySelector(".wchk").outerHTML=`<div class="small muted">✓ green = found · dashed = missed · red = wrong pick</div>`; setTimeout(()=>done(sc),2600); };
+    }
+  });
+}
+function gamePictures(el,done,msg){
+  startScreen(el,msg,msg?"Play again":"Start",()=>{
+    const pics=shuffle(P_POOL.slice()).slice(0,9);
+    el.innerHTML=`<div class="small muted" style="margin-top:12px">Memorise where each picture is (15 s)</div><div class="pgrid">${pics.map(p=>`<span>${p}</span>`).join("")}</div>
+      <div class="timer"><i class="pbar" style="width:100%"></i></div><div class="row"><button class="btn s prdy">I'm ready</button></div>`;
+    let started=false; const stop=countdown(el,"pbar",15000,()=>quiz());
+    el.querySelector(".prdy").onclick=()=>{ stop(); quiz(); };
+    function quiz(){ if(started) return; started=true;
+      const order=shuffle([...Array(9).keys()]).slice(0,6); let qi=0, score=0;
+      const ask=()=>{ if(qi>=6) return done(score); const target=order[qi]; let locked=false;
+        el.innerHTML=`<div class="small muted" style="margin-top:12px">Question ${qi+1} of 6 · where was</div><div style="font-size:46px;margin:4px 0">${pics[target]}</div>
+          <div class="pgrid">${pics.map((p,i)=>`<button data-i="${i}">?</button>`).join("")}</div>`;
+        el.querySelector(".pgrid").onclick=e=>{ const b=e.target.closest("[data-i]"); if(!b||locked) return; locked=true; const i=+b.dataset.i;
+          const right=el.querySelector(`[data-i="${target}"]`); right.textContent=pics[target]; right.classList.add("right");
+          if(i===target){ score++; SFX.hit(); haptic(12); } else { b.classList.add("wrong"); b.textContent=pics[i]; SFX.error(); haptic(60); }
+          qi++; setTimeout(ask,i===target?700:1300); };
+      };
+      ask();
+    }
+  });
+}
+const GAMES={
+  react:{e:"⚡",t:"REACTION TIME",label:"Reaction",d:"Tap the moment the box turns blue. 5 rounds, your average counts.",fn:gameReaction,fmt:v=>v+" ms",lower:true,xp:v=>Math.max(5,Math.min(30,Math.round(30-(v-200)/10)))},
+  num:{e:"🔢",t:"NUMBER MEMORY",label:"Numbers",d:"Remember the number, then type it. One digit longer every round.",fn:gameNumber,fmt:v=>v+" digits",xp:v=>Math.min(40,v*3)},
+  word:{e:"📝",t:"WORD MEMORY",label:"Words",d:"Memorise 10 words, then pick them out of a mixed list.",fn:gameWords,fmt:v=>v+"/10",xp:v=>v*3},
+  pic:{e:"🖼️",t:"PICTURE MEMORY",label:"Pictures",d:"Memorise where 9 pictures are, then find them again.",fn:gamePictures,fmt:v=>v+"/6",xp:v=>v*5}
+};
+document.querySelector('[data-panel="web"]').insertAdjacentHTML("beforebegin", Object.entries(GAMES).map(([k,g])=>`
+  <div data-panel="${k}" class="hidden"><div class="sys" style="text-align:center"><div class="sys-h"><span>${g.t}</span></div>
+    <div class="small muted">${g.d}</div>
+    <div class="gstats" style="margin-top:12px"><div><b id="last_${k}">–</b>LAST</div><div><b id="best_${k}">–</b>BEST</div></div>
+    <div id="area_${k}"></div></div></div>`).join(""));
+function startTrainGame(k,msg){ const g=GAMES[k]; g.fn($("area_"+k), v=>trainResult(k,v), msg); }
+function trainResult(k,v){
+  const g=GAMES[k], old=S.rec[k];
+  const nb = g.lower ? (!old || v<old) : v>(old||0);
+  if(nb) S.rec[k]=v; S.lastG[k]=v;
+  const xp=g.xp(v); S.areaXP.mind+=xp; if(xp>0) gain(xp,$("area_"+k));
+  post({type:"game",cat:"mind",e:g.e,k:g.t,text:g.fmt(v)+(nb?" · new record":""),xp,grad:AREAS.mind.grad});
+  autoSys(k,v); checkBadges(); renderAll(); save();
+  if(nb){ SFX.clear(); haptic([30,40,30]); }
+  startTrainGame(k, `${g.label}: ${g.fmt(v)}${nb?" · NEW RECORD":""}`);
+}
+
 function openTrain(p){
   go("train");
   document.querySelectorAll("#seg button").forEach(b=>b.classList.toggle("on",b.dataset.tp===p));
   document.querySelectorAll("[data-panel]").forEach(x=>x.classList.toggle("hidden",x.dataset.panel!==p));
+  const sb=document.querySelector(`#seg [data-tp="${p}"]`); if(sb) sb.scrollIntoView({inline:"center",block:"nearest"});
+  if(GAMES[p] && !$("area_"+p).innerHTML) startTrainGame(p);
 }
 $("seg").addEventListener("click",e=>{ const b=e.target.closest("[data-tp]"); if(b) openTrain(b.dataset.tp); });
 
@@ -1088,9 +1326,12 @@ function renderProfile(){
       <div><span>STREAK</span><b>${S.streak} 🔥</b></div><div><span>FOCUS DAYS</span><b>${medStreak()} 🧘</b></div></div>
     <div class="xpbar" style="margin-top:14px"><i style="width:${L.into/L.need*100}%"></i></div><div class="small muted r" style="letter-spacing:.1em">EXP ${L.into} / ${L.need} · TOTAL ${S.xp}</div>`;
   $("pScore").innerHTML=`<div class="sys-h"><span>STATS</span></div><div class="small muted" style="text-align:center">Power ${sc.nowAll} → potential <b style="color:var(--cyan)">${sc.potAll}</b></div><div class="areas">${areaRows(sc.now,sc.pot)}</div>`;
+  const bp=bodyItem("push",L.lvl), bl=bodyItem("pull",L.lvl);
   $("records").innerHTML=`<div class="sys-h"><span>RECORDS</span></div><div class="kv" style="margin-top:0">
-    <div><span>PUSH-UPS / DAY</span><b>${t(10,100)} <small class="muted">→ 100</small></b></div><div><span>PULL-UPS / DAY</span><b>${Math.max(1,t(1,20))} <small class="muted">→ 20</small></b></div>
-    <div><span>BEST MEMORY LV</span><b>${S.rec.mem}</b></div><div><span>BEST PATTERN</span><b>${S.rec.pat}/10</b></div>
+    <div><span>PUSH QUEST</span><b>${bp.tgt}</b> <small class="muted">${bp.n}</small></div><div><span>PULL QUEST</span><b>${bl.tgt}</b> <small class="muted">${bl.n}</small></div>
+    <div><span>BEST VISUAL LV</span><b>${S.rec.mem}</b></div><div><span>BEST PATTERN</span><b>${S.rec.pat}/10</b></div>
+    <div><span>BEST REACTION</span><b>${S.rec.react?S.rec.react+" ms":"–"}</b></div><div><span>BEST NUMBERS</span><b>${S.rec.num?S.rec.num+" digits":"–"}</b></div>
+    <div><span>BEST WORDS</span><b>${S.rec.word}/10</b></div><div><span>BEST PICTURES</span><b>${S.rec.pic}/6</b></div>
     <div><span>QUESTS DONE</span><b>${S.counts.quests}</b></div><div><span>DAILIES CLEARED</span><b>${S.counts.cleared}</b></div></div>`;
   $("badges").innerHTML=BADGES.map(([id,e,n])=>`<div class="badge ${S.badges.includes(id)?"on":""}"><div>${e}</div>${n}</div>`).join("");
   $("swSound").classList.toggle("on",S.settings.sound); $("swHap").classList.toggle("on",S.settings.haptics);
@@ -1114,6 +1355,11 @@ $("main").addEventListener("click",e=>{
   const tr=e.target.closest("[data-train]"); if(tr){ openTrain(tr.dataset.train); return; }
   const g=e.target.closest("[data-go]"); if(g){ go(g.dataset.go); return; }
   const ar=e.target.closest("[data-area]"); if(ar){ fCat=filter=ar.dataset.area; renderQuests(); go("quests"); return; }
+  const ac=e.target.closest("[data-acc]"); if(ac){ openArea = openArea===ac.dataset.acc ? null : ac.dataset.acc; renderAll(); return; }
+  const ad=e.target.closest("[data-adj]"); if(ad){ const q=S.sys.items.find(x=>x.id===ad.dataset.adj); if(q&&q.ex){
+      const d=+ad.dataset.d; S.adj[q.ex]=Math.max(.3,Math.min(2.5,(S.adj[q.ex]||1)*(d<0?.8:1.25)));
+      Object.assign(q, bodyItem(q.ex,S.sys.lvl)); SFX.system(); haptic(20);
+      showToast((d<0?"Made easier":"Made harder")+": "+q.n+" "+q.tgt+". Future quests adjust too."); renderAll(); save(); } return; }
   const sy=e.target.closest("[data-sys]"); if(sy){ completeSys(sy.dataset.sys,sy); return; }
   const lk=e.target.closest("[data-like]"); if(lk){ const p=S.feed.find(x=>x.id===lk.dataset.like); if(p){ p.liked=!p.liked; if(p.liked){ SFX.hit(); haptic(15); } renderAll(); save(); } return; }
   const act=e.target.closest("[data-act]"); if(act){ const id=act.closest("[data-qid]").dataset.qid;
