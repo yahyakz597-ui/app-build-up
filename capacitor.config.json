@@ -1,0 +1,8 @@
+{
+  "appId": "com.levelup.system",
+  "appName": "Level Up",
+  "webDir": "www",
+  "backgroundColor": "#03050b",
+  "android": { "backgroundColor": "#03050b" },
+  "ios": { "backgroundColor": "#03050b", "contentInset": "never" }
+}

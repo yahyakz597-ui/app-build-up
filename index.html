@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Level Up — Quest Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#03050b; --panel:#08101fe6; --panel2:#0c1830; --line:#1b3560; --line2:#2b5ea8;
+  --blue:#3fa9ff; --cyan:#8fe9ff; --purple:#8b5cf6; --text:#dce8ff; --muted:#6f86ad;
+  --gold:#ffd166; --red:#ff4d6d; --ok:#2ee6a6;
+  --body:#ff5e6c; --mind:#b07cff; --focus:#3fa9ff; --pflege:#2ee6a6;
+  --glow:0 0 18px #2d8cff55, inset 0 0 18px #2d8cff1a;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+body{background:radial-gradient(900px 500px at 50% -150px,#0b1d45 0%,#03050b 70%) fixed}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input{font:inherit}
+a{color:var(--cyan)}
+.app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;z-index:1}
+.hidden{display:none!important}
+.r{font-family:Rajdhani,sans-serif;letter-spacing:.06em}
+.muted{color:var(--muted)} .small{font-size:12px}
+.glowtxt{color:#eaf6ff;text-shadow:0 0 8px #3fa9ff,0 0 22px #3fa9ff88}
+canvas#bgfx{position:fixed;inset:0;z-index:0;pointer-events:none}
+canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:90}
+:root{--sat:var(--safe-area-inset-top,env(safe-area-inset-top,0px));--sab:var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px))}
+
+/* ---------- system panel ---------- */
+.sys{position:relative;background:linear-gradient(180deg,#0a1630f0,#050a16f0);border:1px solid var(--line2);border-radius:6px;
+  box-shadow:var(--glow);margin:14px 12px;padding:16px}
+.sys::before,.sys::after{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--cyan);pointer-events:none}
+.sys::before{top:-2px;left:-2px;border-right:0;border-bottom:0}
+.sys::after{bottom:-2px;right:-2px;border-left:0;border-top:0}
+.sys-h{display:flex;justify-content:center;margin:-4px 0 12px}
+.sys-h span{font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.18em;font-size:14px;padding:4px 14px;border:1px solid var(--line2);
+  border-radius:3px;background:#0b1a36;color:#eaf6ff;text-shadow:0 0 8px #3fa9ff}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:12px;padding:16px}
+
+/* ---------- onboarding / intro ---------- */
+#ob{min-height:100vh;display:flex;flex-direction:column;padding:calc(18px + var(--sat)) 20px calc(26px + var(--sab));position:relative}
+.awaken{position:fixed;inset:0;background:#000;display:grid;place-items:center;z-index:5;text-align:center;cursor:pointer}
+.awaken p{font-family:Rajdhani,sans-serif;letter-spacing:.4em;color:#6f86ad;font-size:14px;animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.typer{font-family:Rajdhani,sans-serif;font-size:22px;font-weight:600;line-height:1.5;min-height:140px;white-space:pre-wrap}
+.cursor{display:inline-block;width:9px;height:20px;background:var(--cyan);vertical-align:-3px;animation:pulse 1s steps(1) infinite;margin-left:2px}
+.ob-bars{display:flex;gap:4px;margin-bottom:22px}
+.ob-bars i{flex:1;height:3px;background:#13284a;border-radius:2px}
+.ob-bars i.on{background:var(--blue);box-shadow:0 0 8px var(--blue)}
+.ob-body{flex:1;display:flex;flex-direction:column;animation:fadein .35s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}}
+.ob-emoji{font-size:46px;margin:8px 0}
+.ob-q{font-size:24px;font-weight:800;line-height:1.25;margin:0 0 6px}
+.ob-sub{color:var(--muted);margin:0 0 20px;font-size:14px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{padding:15px 16px;border-radius:6px;border:1px solid var(--line);background:#07101f;text-align:left;font-weight:700;font-size:15px;transition:.15s}
+.opt:hover{border-color:var(--line2)}
+.opt.on{border-color:var(--cyan);box-shadow:var(--glow);background:#0b1a36}
+.txt{width:100%;padding:15px 16px;border-radius:6px;border:1px solid var(--line);background:#07101f;color:var(--text);font-size:17px;font-weight:700;outline:none}
+.txt:focus{border-color:var(--cyan);box-shadow:var(--glow)}
+.avatars{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:14px}
+.av{aspect-ratio:1;font-size:24px;border-radius:6px;background:#07101f;border:1px solid var(--line)}
+.av.on{border-color:var(--cyan);box-shadow:var(--glow)}
+.cta{width:100%;padding:16px;border-radius:6px;background:linear-gradient(90deg,#1559d6,#3fa9ff);color:#fff;font-family:Rajdhani,sans-serif;font-weight:700;
+  letter-spacing:.2em;font-size:17px;box-shadow:0 0 24px #2d8cff66;margin-top:18px;text-transform:uppercase}
+.cta:disabled{opacity:.35;box-shadow:none}
+.cta.ghost{background:transparent;border:1px solid var(--line2);box-shadow:none}
+.back{color:var(--muted);font-weight:700;padding:10px;margin-top:4px}
+.scan{flex:1;display:grid;place-items:center;text-align:center}
+.ring-spin{width:96px;height:96px;border-radius:50%;border:2px solid #13284a;border-top-color:var(--cyan);box-shadow:0 0 30px #2d8cff55;animation:spin .9s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gauge{position:relative;width:190px;height:190px;margin:2px auto}
+.gauge svg{transform:rotate(-90deg)}
+.gauge .lbl{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.gauge b{font-family:Rajdhani,sans-serif;font-size:60px;font-weight:700;display:block;line-height:1}
+.gauge small{color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.2em;font-family:Rajdhani}
+.pot-row{display:flex;gap:10px;margin:12px 0}
+.pot{flex:1;border:1px solid var(--line);border-radius:6px;padding:12px;text-align:center;background:#07101f}
+.pot b{font-family:Rajdhani,sans-serif;font-size:30px;display:block}
+.pot span{font-size:11px;color:var(--muted);font-weight:700}
+.insight{border-left:2px solid var(--cyan);background:#07101f;padding:12px 14px;margin-top:10px;font-size:14px;line-height:1.45;border-radius:0 6px 6px 0}
+.insight b{display:block;margin-bottom:2px}
+
+/* ---------- main ---------- */
+.top{position:sticky;top:0;z-index:20;background:#03050bdd;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;padding:calc(12px + var(--sat)) 14px 12px}
+.logo{font-family:Rajdhani,sans-serif;font-weight:700;font-size:24px;letter-spacing:.22em}
+.logo small{display:block;font-size:9px;letter-spacing:.5em;color:var(--muted);margin-top:-4px}
+.pill{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:4px;padding:5px 10px;font-weight:700;font-size:12px;font-family:Rajdhani,sans-serif;letter-spacing:.08em;background:#07101f}
+.iconbtn{width:34px;height:30px;border:1px solid var(--line);border-radius:4px;background:#07101f;font-size:15px}
+.view{padding:0 0 calc(104px + var(--sab))}
+.section-title{font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:14px;margin:22px 16px 6px;display:flex;justify-content:space-between;align-items:center;color:var(--cyan)}
+.section-title a{font-size:12px;color:var(--muted);cursor:pointer;letter-spacing:.05em}
+
+/* stories */
+.stories{display:flex;gap:14px;overflow-x:auto;padding:14px 14px 12px;border-bottom:1px solid var(--line);scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.story{display:flex;flex-direction:column;align-items:center;gap:6px;flex:none;width:68px}
+.ring{width:64px;height:64px;border-radius:50%;padding:2px;background:conic-gradient(var(--cyan),var(--purple),var(--blue),var(--cyan));box-shadow:0 0 14px #2d8cff66}
+.ring.seen{background:#1b3560;box-shadow:none}
+.ring > div{width:100%;height:100%;border-radius:50%;background:var(--bg);padding:3px}
+.ring > div > div{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;font-size:24px;position:relative;background:#0a1630}
+.story span{font-size:10px;font-weight:700;max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+.plus{position:absolute;right:-3px;bottom:-3px;width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:14px;font-weight:800;display:grid;place-items:center;border:2px solid var(--bg)}
+
+/* daily quest */
+.dq-goal{text-align:center;font-family:Rajdhani,sans-serif;font-size:13px;letter-spacing:.14em;color:var(--muted);margin-bottom:10px}
+.dq-area{font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.14em;font-size:12px;margin:12px 0 4px;display:flex;align-items:center;gap:6px}
+.dq{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed #18305a;font-size:14px}
+.dq:last-child{border-bottom:0}
+.dq .n{flex:1;font-weight:600}
+.dq .n small{display:block;color:var(--muted);font-size:11px;font-weight:500;margin-top:2px}
+.dq .tgt{font-family:Rajdhani,sans-serif;font-weight:700;font-size:16px;color:var(--cyan);white-space:nowrap}
+.box{width:24px;height:24px;border:1.5px solid var(--line2);border-radius:3px;flex:none;display:grid;place-items:center;font-size:13px;color:#03050b;font-weight:900}
+.dq.done .box{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.dq.done .n{color:var(--muted);text-decoration:line-through}
+.dq.done .tgt{color:var(--muted)}
+.mini{font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.1em;font-size:12px;padding:6px 10px;border:1px solid var(--line2);border-radius:3px;color:var(--cyan);background:#0b1a36;white-space:nowrap;text-decoration:none}
+.dq-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:12px;color:var(--muted)}
+.prog{height:6px;background:#0f2242;border-radius:3px;overflow:hidden;margin-top:8px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 10px var(--cyan);transition:width .6s}
+.warn{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.4}
+
+/* challenge */
+.dots{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin:10px 0 12px}
+.dots i{aspect-ratio:1;border-radius:3px;border:1px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:10px;font-weight:700;color:var(--muted);background:#07101f;font-family:Rajdhani}
+.dots i.on{background:var(--blue);border-color:var(--cyan);color:#fff;box-shadow:0 0 8px var(--blue)}
+.dots i.next{border-color:var(--cyan);color:var(--cyan)}
+.btn{flex:1;padding:14px;border-radius:6px;font-weight:700;font-family:Rajdhani,sans-serif;letter-spacing:.14em;text-transform:uppercase;font-size:15px}
+.btn.p{background:linear-gradient(90deg,#1559d6,#3fa9ff);color:#fff;box-shadow:0 0 20px #2d8cff55}
+.btn.s{border:1px solid var(--line2);background:#07101f}
+.row{display:flex;gap:10px;margin-top:14px}
+
+/* score */
+.score-row{display:flex;align-items:center;gap:14px}
+.mini-gauge{width:76px;height:76px;flex:none;position:relative}
+.mini-gauge svg{transform:rotate(-90deg)}
+.mini-gauge b{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;font-family:Rajdhani}
+.areas{display:grid;gap:10px;margin-top:14px}
+.area-row{display:grid;grid-template-columns:82px 1fr 46px;align-items:center;gap:8px;font-size:12px;font-weight:700}
+.area-row .k{font-family:Rajdhani,sans-serif;letter-spacing:.1em}
+.track{height:8px;background:#0b1a36;border-radius:2px;position:relative;overflow:hidden}
+.track .pot-mark{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,#0000 0 4px,#ffffff14 4px 8px)}
+.track .fill{position:absolute;left:0;top:0;bottom:0;transition:width .8s}
+
+/* quests */
+.q{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid #12264a}
+.q:last-child{border-bottom:0}
+.q .chk{width:26px;height:26px;border-radius:3px;border:1.5px solid var(--line2);flex:none;display:grid;place-items:center;font-size:13px;color:#03050b;font-weight:900}
+.q.done .chk{background:var(--cyan);border-color:var(--cyan)}
+.q.done .qt{text-decoration:line-through;color:var(--muted)}
+.qt{flex:1;font-weight:600;font-size:15px;word-break:break-word}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:3px;white-space:nowrap;font-family:Rajdhani,sans-serif;letter-spacing:.06em;border:1px solid currentColor}
+.x{color:#3d557d;font-size:20px;padding:2px 6px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 12px;border-radius:4px;border:1px solid var(--line);background:#07101f;font-weight:600;font-size:13px}
+.chip.on{border-color:var(--cyan);color:#fff;box-shadow:var(--glow)}
+.scroll-chips{display:flex;gap:8px;overflow-x:auto;padding:0 12px 4px;scrollbar-width:none}
+.scroll-chips::-webkit-scrollbar{display:none}
+.scroll-chips .chip{flex:none}
+.idea{border-style:dashed;color:var(--muted)}
+.lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin:14px 0 8px;font-family:Rajdhani}
+.empty{text-align:center;color:var(--muted);padding:24px 10px;font-size:14px}
+.empty b{display:block;font-size:30px;margin-bottom:6px}
+
+/* feed */
+.post{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:12px 0;background:#050a16}
+.post-h{display:flex;align-items:center;gap:10px;padding:11px 14px}
+.av-s{width:34px;height:34px;border-radius:50%;padding:2px;background:conic-gradient(var(--cyan),var(--purple),var(--cyan));flex:none}
+.av-s div{width:100%;height:100%;border-radius:50%;background:#0a1630;display:grid;place-items:center;font-size:16px}
+.post-img{aspect-ratio:4/3;display:grid;place-items:center;text-align:center;padding:24px;position:relative;overflow:hidden}
+.post-img::before{content:"";position:absolute;inset:16px;border:1px solid #ffffff30}
+.post-img .k{font-family:Rajdhani,sans-serif;letter-spacing:.3em;font-size:12px;color:#ffffffaa;margin-bottom:10px}
+.post-img .e{font-size:58px;line-height:1;margin-bottom:12px;filter:drop-shadow(0 0 18px #ffffff55)}
+.post-img .t{font-size:21px;font-weight:800;line-height:1.25;color:#fff;text-shadow:0 0 14px #0008}
+.post-img .xp{position:absolute;top:24px;right:24px;font-family:Rajdhani,sans-serif;font-weight:700;color:#fff;letter-spacing:.1em;text-shadow:0 0 8px #fff}
+.post-a{display:flex;align-items:center;gap:12px;padding:10px 14px 12px;font-size:13px}
+.heart{font-size:22px}
+.heart.on{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.4)}}
+
+/* train */
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:14px 12px 0}
+.seg button{padding:10px 4px;border:1px solid var(--line);border-radius:4px;font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.08em;font-size:13px;background:#07101f;color:var(--muted)}
+.seg button.on{border-color:var(--cyan);color:#fff;box-shadow:var(--glow)}
+.breath-wrap{display:grid;place-items:center;margin:8px 0;height:250px;position:relative}
+.orb{width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#c9f3ff,#3fa9ff 40%,#2340a8 70%,#120a3a);
+  transform:scale(.6);box-shadow:0 0 60px #2d8cffaa,0 0 140px #8b5cf644;transition:transform .25s linear}
+.orb-txt{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-family:Rajdhani,sans-serif;font-weight:700;letter-spacing:.12em;font-size:18px;text-shadow:0 0 10px #000;pointer-events:none}
+.clock{font-family:Rajdhani,sans-serif;font-size:48px;font-weight:700;text-align:center;letter-spacing:.05em}
+.phases{display:grid;gap:4px;margin:12px 0 6px}
+.phases div{height:6px;border-radius:2px;background:#0f2242;overflow:hidden}
+.phases div i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.phase-l{display:grid;gap:4px;font-size:11px;font-weight:700;color:var(--muted)}
+.how{font-size:14px;line-height:1.5}
+.how li{margin-bottom:6px}
+.ladder{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-top:10px;text-align:center;font-family:Rajdhani,sans-serif;font-size:11px;color:var(--muted)}
+.ladder div{border:1px solid var(--line);border-radius:3px;padding:4px 0;background:#07101f}
+.ladder div b{display:block;font-size:14px;color:var(--text)}
+.ladder div.on{border-color:var(--cyan);box-shadow:var(--glow)}
+.grid{display:grid;gap:6px;margin:12px auto 4px;max-width:340px}
+.tile{aspect-ratio:1;border-radius:4px;background:#0b1a36;border:1px solid var(--line);transition:background .15s,box-shadow .15s}
+.tile.show,.tile.hit{background:var(--cyan);box-shadow:0 0 16px var(--cyan)}
+.tile.miss{background:#3a0f1c;border-color:var(--red)}
+.gstats{display:flex;justify-content:space-around;font-family:Rajdhani,sans-serif;letter-spacing:.12em;font-size:14px;margin-top:4px}
+.gstats b{font-size:22px;color:var(--cyan);display:block;text-align:center}
+.seq{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:16px 0}
+.seq span{min-width:46px;height:52px;padding:0 8px;border:1px solid var(--line2);border-radius:4px;display:grid;place-items:center;font-family:Rajdhani,sans-serif;font-weight:700;font-size:22px;background:#07101f}
+.seq span.q{border-color:var(--cyan);color:var(--cyan);box-shadow:var(--glow)}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.answers button{padding:16px;border:1px solid var(--line2);border-radius:4px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:22px;background:#0b1a36}
+.answers button.right{background:#0d3b2e;border-color:var(--ok);box-shadow:0 0 14px var(--ok)}
+.answers button.wrong{background:#3a0f1c;border-color:var(--red)}
+.timer{height:4px;background:#0f2242;border-radius:2px;overflow:hidden;margin-top:6px}
+.timer i{display:block;height:100%;background:var(--cyan)}
+.link{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed #18305a;text-decoration:none;color:var(--text)}
+.link:last-child{border-bottom:0}
+.link .ic{width:42px;height:42px;border:1px solid var(--line2);border-radius:4px;display:grid;place-items:center;font-size:20px;flex:none;background:#0b1a36}
+.link b{display:block;font-size:14px}
+.link span{font-size:12px;color:var(--muted)}
+
+/* profile */
+.status{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.p-av{width:92px;height:92px;position:relative}
+.p-av svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.p-av div{position:absolute;inset:8px;border-radius:50%;background:#0a1630;display:grid;place-items:center;font-size:40px}
+.rank-badge{font-family:Rajdhani,sans-serif;font-weight:700;font-size:44px;line-height:1}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.kv div{border:1px solid var(--line);border-radius:4px;padding:10px;background:#07101f}
+.kv span{font-size:11px;color:var(--muted);font-family:Rajdhani,sans-serif;letter-spacing:.12em;display:block}
+.kv b{font-family:Rajdhani,sans-serif;font-size:20px}
+.xpbar{height:6px;border-radius:2px;background:#0f2242;overflow:hidden;margin:8px 0 4px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 10px var(--cyan)}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge{text-align:center;font-size:10px;font-weight:700;color:var(--muted)}
+.badge div{aspect-ratio:1;border-radius:6px;border:1px solid var(--line);background:#07101f;display:grid;place-items:center;font-size:26px;margin-bottom:5px;filter:grayscale(1);opacity:.35}
+.badge.on{color:var(--text)}
+.badge.on div{filter:none;opacity:1;border-color:var(--cyan);box-shadow:var(--glow)}
+.toggle{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-weight:600}
+.sw{width:46px;height:26px;border-radius:13px;background:#13284a;position:relative;transition:.2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#6f86ad;transition:.2s}
+.sw.on{background:#1559d6;box-shadow:0 0 10px #3fa9ff88}
+.sw.on::after{left:23px;background:#fff}
+.linkbtn{width:100%;padding:14px;border-radius:6px;border:1px solid var(--line);background:#07101f;font-weight:700;margin-top:10px}
+.linkbtn.danger{color:var(--red);border-color:#4a1626}
+
+/* nav */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#03050bf2;backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(10px + var(--sab));z-index:30}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:700;color:var(--muted);font-family:Rajdhani,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.nav button .i{font-size:20px;filter:grayscale(1) brightness(.7)}
+.nav button.on{color:var(--cyan)}
+.nav button.on .i{filter:drop-shadow(0 0 6px #3fa9ff)}
+.nav .plusbtn .i{width:44px;height:44px;border-radius:6px;background:linear-gradient(135deg,#1559d6,#3fa9ff);color:#fff;display:grid;place-items:center;filter:none;font-size:24px;margin-top:-4px;box-shadow:0 0 18px #2d8cff88}
+
+/* toast / modal / float */
+.toast{position:fixed;left:50%;bottom:calc(90px + var(--sab));transform:translateX(-50%);background:#0a1630f5;border:1px solid var(--line2);box-shadow:var(--glow);color:#fff;padding:11px 15px;border-radius:5px;
+  display:none;gap:14px;align-items:center;z-index:60;font-weight:600;font-size:13px;max-width:92vw}
+.toast button{color:var(--gold);font-weight:800;font-family:Rajdhani,sans-serif;letter-spacing:.1em}
+.modal{position:fixed;inset:0;background:#000c;display:none;place-items:center;z-index:70;padding:24px}
+.modal .sys{max-width:340px;width:100%;text-align:center;animation:sysin .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes sysin{from{transform:scaleY(.05);opacity:0}}
+.modal h3{font-family:Rajdhani,sans-serif;font-size:34px;letter-spacing:.12em;margin:6px 0}
+.float{position:fixed;font-family:Rajdhani,sans-serif;font-weight:700;font-size:22px;color:var(--cyan);text-shadow:0 0 10px var(--cyan);pointer-events:none;animation:up 1.1s ease-out forwards;z-index:50}
+@keyframes up{to{transform:translateY(-70px);opacity:0}}
+.wb{position:fixed;inset:0;background:#000;display:grid;place-items:center;z-index:85;transition:opacity .8s}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="bgfx"></canvas>
+<canvas id="confetti"></canvas>
+<div class="app">
+
+  <div id="splash" style="min-height:100vh;display:grid;place-items:center"><div class="r muted">[ SYSTEM LOADING… ]</div></div>
+  <div id="ob" class="hidden"></div>
+
+  <div id="main" class="hidden">
+    <header class="top">
+      <div class="logo glowtxt">LEVEL UP<small>THE SYSTEM</small></div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="iconbtn" id="sndBtn" aria-label="Sound">🔊</button>
+        <div class="pill" id="pStreak">🔥 0</div>
+        <div class="pill" id="pLevel">E · LV 1</div>
+      </div>
+    </header>
+
+    <!-- HOME -->
+    <section class="view" data-view="home">
+      <div class="stories" id="stories"></div>
+      <div class="sys" id="dailyPanel"></div>
+      <div class="sys" id="challengeCard"></div>
+      <div class="card" id="scoreCard"></div>
+      <div class="section-title">My quests <a data-go="quests">See all ›</a></div>
+      <div class="card" style="padding:4px 14px" id="todayList"></div>
+      <div class="section-title">Activity feed</div>
+      <div id="feed"></div>
+    </section>
+
+    <!-- QUESTS -->
+    <section class="view hidden" data-view="quests">
+      <div class="sys" style="margin-top:18px">
+        <div class="sys-h"><span>CREATE QUEST</span></div>
+        <form id="addForm">
+          <input class="txt" id="qInput" placeholder="What will you do?" maxlength="120" autocomplete="off" style="font-size:16px">
+          <div class="lbl">Stat</div><div class="chips" id="catChips"></div>
+          <div class="lbl">Ideas, tap to use</div><div class="chips" id="ideas"></div>
+          <div class="lbl">Difficulty</div><div class="chips" id="sizeChips"></div>
+          <div class="lbl">Repeat</div><div class="chips"><button type="button" class="chip" id="dailyChip">🔁 Every day</button></div>
+          <button class="cta" type="submit">Register quest</button>
+        </form>
+      </div>
+      <div class="section-title">My quests</div>
+      <div class="scroll-chips" id="filterChips"></div>
+      <div class="card" style="padding:4px 14px" id="questList"></div>
+    </section>
+
+    <!-- TRAIN -->
+    <section class="view hidden" data-view="train">
+      <div class="seg" id="seg">
+        <button data-tp="med" class="on">🧘 Meditate</button>
+        <button data-tp="mem">🧩 Memory</button>
+        <button data-tp="pat">🔷 Patterns</button>
+        <button data-tp="web">🌐 Websites</button>
+      </div>
+
+      <div data-panel="med">
+        <div class="sys" style="text-align:center">
+          <div class="sys-h"><span>FOCUS TRAINING</span></div>
+          <div style="font-size:21px;font-weight:800" id="medTitle">Breathe + Meditate · 7 min</div>
+          <div class="muted small" id="medSub"></div>
+          <div class="breath-wrap"><div class="orb" id="orb"></div><div class="orb-txt" id="orbTxt">READY</div></div>
+          <div class="clock" id="clock">07:00</div>
+          <div class="phases" id="phases"><div><i id="ph1"></i></div><div><i id="ph2"></i></div></div>
+          <div class="phase-l" id="phaseL"><span>🌬️ Breathwork</span><span>🧘 Meditation</span></div>
+          <div class="row"><button class="btn p" id="sStart">Begin</button><button class="btn s hidden" id="sEnd">End</button></div>
+        </div>
+        <div class="sys">
+          <div class="sys-h"><span>10-DAY FOCUS CHALLENGE</span></div>
+          <div class="small muted">The session grows a little every day, from 7 minutes on day 1 to 17 minutes on day 10.</div>
+          <div class="ladder" id="ladder"></div>
+          <div class="dots" id="dotsF" style="margin-top:12px"></div>
+          <div class="small muted" id="chTxt"></div>
+        </div>
+        <div class="card how">
+          <b>How it works</b>
+          <ol style="padding-left:18px;margin:8px 0 0">
+            <li><b>Cyclic sighing:</b> two short inhales through the nose, then one long, slow exhale through the mouth. Follow the orb.</li>
+            <li><b>Meditation:</b> eyes closed, attention on a point behind your forehead or on your breath. When your mind wanders, gently come back. Every return is one rep.</li>
+            <li>A bell marks the switch and the end. Finish the full session to count the day.</li>
+          </ol>
+          <p class="small muted" style="margin:10px 0 0">If you feel dizzy, breathe normally and take a break.</p>
+        </div>
+      </div>
+
+      <div data-panel="mem" class="hidden">
+        <div class="sys" style="text-align:center">
+          <div class="sys-h"><span>VISUAL MEMORY</span></div>
+          <div class="small muted">Tiles light up. Remember them, then tap them all. 3 wrong taps cost a life.</div>
+          <div class="gstats" style="margin-top:12px"><div><b id="memLvl">1</b>LEVEL</div><div><b id="memLives">♥♥♥</b>LIVES</div><div><b id="memBest">0</b>BEST</div></div>
+          <div class="grid" id="memGrid"></div>
+          <div class="small" id="memMsg" style="min-height:18px;color:var(--cyan)"></div>
+          <div class="row"><button class="btn p" id="memStart">Start</button></div>
+        </div>
+      </div>
+
+      <div data-panel="pat" class="hidden">
+        <div class="sys" style="text-align:center">
+          <div class="sys-h"><span>PATTERN RECOGNITION</span></div>
+          <div class="small muted">10 sequences. Find what comes next. 20 seconds each.</div>
+          <div class="gstats" style="margin-top:12px"><div><b id="patQ">–</b>QUESTION</div><div><b id="patScore">0</b>SCORE</div><div><b id="patBest">0</b>BEST</div></div>
+          <div id="patBox"><div class="empty"><b>🔷</b>Numbers, symbols and letters follow a hidden rule. Can you crack it?</div></div>
+          <div class="row" id="patStartRow"><button class="btn p" id="patStart">Start</button></div>
+        </div>
+      </div>
+
+      <div data-panel="web" class="hidden">
+        <div class="sys">
+          <div class="sys-h"><span>EXTERNAL TRAINING</span></div>
+          <div class="small muted" style="margin-bottom:6px">Free brain tests on Human Benchmark. They open in a new tab. Come back and tick off your daily website quest afterwards.</div>
+          <div id="webList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="view hidden" data-view="profile">
+      <div class="sys" style="margin-top:18px" id="statusWin"></div>
+      <div class="sys" id="pScore"></div>
+      <div class="sys" id="records"></div>
+      <div class="section-title">Badges</div>
+      <div class="card"><div class="badges" id="badges"></div></div>
+      <div class="section-title">Settings</div>
+      <div class="card">
+        <div class="toggle">🔊 Sound effects <button class="sw" id="swSound"></button></div>
+        <div class="toggle">📳 Vibration (haptics) <button class="sw" id="swHap"></button></div>
+        <div class="small muted" id="hapNote">Vibration works on Android phones. iPhones don't allow websites to vibrate, but the installed iPhone app can.</div>
+      </div>
+      <div style="padding:0 12px 20px">
+        <button class="linkbtn" id="retake">🔄 Redo my assessment</button>
+        <button class="linkbtn danger" id="resetBtn">Reset all progress</button>
+      </div>
+    </section>
+
+    <nav class="nav" id="nav">
+      <button data-go="home" class="on"><span class="i">🏠</span>Home</button>
+      <button data-go="quests"><span class="i">📜</span>Quests</button>
+      <button data-go="add" class="plusbtn"><span class="i">＋</span></button>
+      <button data-go="train"><span class="i">⚔️</span>Train</button>
+      <button data-go="profile"><span class="i">👤</span>Status</button>
+    </nav>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span><button id="undoBtn">UNDO</button></div>
+<div class="modal" id="modal"><div class="sys">
+  <div class="sys-h"><span id="mHead">NOTIFICATION</span></div>
+  <div style="font-size:50px" id="mEmoji">⚡</div>
+  <h3 class="glowtxt" id="mTitle">LEVEL UP!</h3>
+  <p class="muted" id="mText" style="line-height:1.5"></p>
+  <button class="cta" id="mClose">Confirm</button>
+</div></div>
+
+<script>
+(() => {
+// ================= config =================
+const AREAS = {
+  body:  {label:"Body",  stat:"STR", emoji:"💪", color:"#ff5e6c", grad:"linear-gradient(160deg,#12040a,#4a0f1d 55%,#ff5e6c)"},
+  mind:  {label:"Mind",  stat:"INT", emoji:"🧠", color:"#b07cff", grad:"linear-gradient(160deg,#08041a,#2b1466 55%,#b07cff)"},
+  focus: {label:"Focus", stat:"PER", emoji:"🎯", color:"#3fa9ff", grad:"linear-gradient(160deg,#020814,#0b2a66 55%,#3fa9ff)"},
+  pflege:{label:"Pflege",stat:"SKL", emoji:"🩺", color:"#2ee6a6", grad:"linear-gradient(160deg,#02100c,#0b4a3a 55%,#2ee6a6)"}
+};
+const SIZES = {tiny:{xp:10,label:"⚡ Easy · 10 XP"}, med:{xp:25,label:"⚔️ Normal · 25 XP"}, big:{xp:50,label:"👹 Hard · 50 XP"}};
+const IDEAS = {
+  body:["10-min walk outside","Drink 2 L water","Stretch for 5 min","In bed before 23:00","Take the stairs"],
+  mind:["Write 3 lines in a journal","5 min morning sunlight","No phone for the first 30 min","Memorise 5 new words","Name 3 good things today"],
+  focus:["Phone in another room","Clear my desk","One task only for 30 min","Plan tomorrow in 3 bullet points","No social media until noon"],
+  pflege:["Review one Lernfeld","Practise a Pflegeplanung","Update my Ausbildungsnachweis","Revise vital signs & normal values","Quiz myself on 10 Medikamente"]
+};
+const WEB = [
+  {id:"memory",  e:"🟦", n:"Visual Memory",   d:"Remember growing grids of squares",           url:"https://humanbenchmark.com/tests/memory"},
+  {id:"sequence",e:"🔢", n:"Sequence Memory", d:"Repeat longer and longer patterns",            url:"https://humanbenchmark.com/tests/sequence"},
+  {id:"chimp",   e:"🐒", n:"Chimp Test",      d:"Visual working memory + pattern recognition", url:"https://humanbenchmark.com/tests/chimp"},
+  {id:"number",  e:"🔟", n:"Number Memory",   d:"How many digits can you hold?",                url:"https://humanbenchmark.com/tests/number-memory"}
+];
+const AVATARS = ["🗡️","🐺","🦅","🐉","🌙","⚡","🔥","🦊","🐱","🌸","💎","👁️"];
+const STEPS = [
+  {k:"intro"},
+  {k:"name"},
+  {k:"year", e:"🩺", q:"Where are you in your Pflegeausbildung?", s:"So your Pflege quests fit your stage.",
+    o:[["1. Ausbildungsjahr",1],["2. Ausbildungsjahr",2],["3. Ausbildungsjahr",3],["Not started yet",0]]},
+  {k:"sleep", e:"😴", q:"How much do you usually sleep?", s:"Sleep is the base for focus and mood.",
+    o:[["Under 5 hours",4.5],["5–6 hours",5.5],["6–7 hours",6.5],["7–8 hours",7.5],["More than 8 hours",8.5]]},
+  {k:"exercise", e:"🏃", q:"How many days a week do you move or exercise?", s:"Walking counts!",
+    o:[["Almost never",0],["1–2 days",1.5],["3–4 days",3.5],["5 or more days",5.5]]},
+  {k:"stress", e:"🌪️", q:"How stressed have you felt lately?", s:"Be honest, only you see this.",
+    o:[["Pretty calm",2],["Some stress",5],["A lot of stress",7.5],["Completely overwhelmed",9.5]]},
+  {k:"mood", e:"💭", q:"How has your mood been this week?", s:"",
+    o:[["😞 Really low",1],["😕 Not great",2],["😐 Okay",3],["🙂 Good",4],["😄 Great",5]]},
+  {k:"focusMin", e:"🎯", q:"How long can you focus before getting distracted?", s:"For example while studying.",
+    o:[["Less than 5 minutes",3],["5–15 minutes",10],["15–30 minutes",22],["More than 30 minutes",40]]},
+  {k:"screen", e:"📱", q:"How much time do you spend on your phone per day?", s:"Check your screen time if you're not sure.",
+    o:[["Under 2 hours",1.5],["2–4 hours",3],["4–6 hours",5],["More than 6 hours",7]]},
+  {k:"study", e:"📚", q:"How many hours a week do you study for your Ausbildung?", s:"Outside of class and Praxis.",
+    o:[["0–2 hours",1],["2–5 hours",3.5],["5–10 hours",7.5],["More than 10 hours",12]]},
+  {k:"confidence", e:"💡", q:"How confident do you feel about your Ausbildung?", s:"Exams, Praxis, theory: overall.",
+    o:[["😰 I'm struggling",2],["😐 It's okay",5],["🙂 Pretty good",7],["😎 Very confident",9]]},
+  {k:"analyse"},
+  {k:"result"}
+];
+
+// ================= helpers =================
+const pad = n => String(n).padStart(2,"0");
+const keyOf = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const todayKey = () => keyOf(new Date());
+const dayDiff = (a,b) => { const p=s=>{const[y,m,d]=s.split("-").map(Number);return Date.UTC(y,m-1,d)}; return Math.round((p(b)-p(a))/864e5); };
+const uid = () => Math.random().toString(36).slice(2,10);
+const esc = s => String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $ = id => document.getElementById(id);
+const clamp = x => Math.max(5, Math.min(100, Math.round(x)));
+const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function timeAgo(ts){ const s=(Date.now()-ts)/1000; if(s<60) return "just now"; if(s<3600) return Math.floor(s/60)+" min ago"; if(s<86400) return Math.floor(s/3600)+" h ago"; const d=Math.floor(s/86400); return d===1?"yesterday":d+" days ago"; }
+
+// ================= state =================
+function fresh(){
+  return { v:3, profile:null, base:null, xp:0, streak:0, best:0, lastActive:null, doneDay:todayKey(), doneToday:0,
+    quests:[], feed:[], areaXP:{body:0,mind:0,focus:0,pflege:0}, counts:{quests:0,body:0,mind:0,focus:0,pflege:0,cleared:0},
+    med:{days:[], total:0, best:0}, sys:null, rec:{mem:0,pat:0}, badges:[], settings:{sound:true,haptics:true} };
+}
+let S = fresh();
+
+// ================= sound + haptics =================
+let AC=null, drone=null;
+function ac(){ try{ if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==="suspended") AC.resume(); }catch(e){ AC=null; } return AC; }
+function tone(f,dur,type="sine",vol=.15,delay=0,to){
+  if(!S.settings.sound) return; const a=ac(); if(!a) return;
+  try{ const t=a.currentTime+delay, o=a.createOscillator(), g=a.createGain();
+    o.type=type; o.frequency.setValueAtTime(f,t); if(to) o.frequency.exponentialRampToValueAtTime(to,t+dur);
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+.015); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur+.05); }catch(e){}
+}
+const SFX = {
+  tap:   ()=>tone(1400,.04,"square",.025),
+  type:  ()=>tone(1500+Math.random()*400,.02,"square",.018),
+  system:()=>{ tone(880,.14,"sine",.12); tone(1320,.3,"sine",.09,.09); tone(1760,.6,"triangle",.05,.18); },
+  quest: ()=>[659,880,1175,1568].forEach((f,i)=>tone(f,.22,"triangle",.11,i*.06)),
+  clear: ()=>{ [523,659,784,1047,1319].forEach((f,i)=>tone(f,.35,"triangle",.1,i*.08)); tone(2093,1.2,"sine",.05,.45); },
+  level: ()=>{ tone(110,.7,"sawtooth",.06,0,880); [523,659,784,1047].forEach(f=>tone(f,1.4,"triangle",.07,.6)); tone(2093,1.6,"sine",.05,.7); },
+  error: ()=>{ tone(196,.18,"sawtooth",.07); tone(147,.28,"sawtooth",.07,.12); },
+  hit:   ()=>tone(1046+Math.random()*200,.09,"sine",.12),
+  bell:  f=>{ tone(f||528,3.2,"sine",.25); tone((f||528)*2.01,2,"sine",.06); }
+};
+function droneStart(){
+  if(!S.settings.sound || drone) return; const a=ac(); if(!a) return;
+  try{ const g=a.createGain(), lp=a.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=260;
+    g.gain.setValueAtTime(.0001,a.currentTime); g.gain.exponentialRampToValueAtTime(.09,a.currentTime+2.5);
+    const os=[55,55.6,82.4].map((f,i)=>{ const o=a.createOscillator(); o.type=i===2?"sine":"sawtooth"; o.frequency.value=f; o.connect(lp); o.start(); return o; });
+    lp.connect(g).connect(a.destination); drone={g,os}; }catch(e){}
+}
+function droneStop(){ if(!drone||!AC) return; const d=drone; drone=null;
+  try{ d.g.gain.setTargetAtTime(.0001,AC.currentTime,.6); setTimeout(()=>d.os.forEach(o=>{try{o.stop()}catch(e){}}),2500); }catch(e){} }
+const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+function haptic(p){
+  if(!S.settings.haptics) return;
+  const H = NATIVE && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+  if(H){ const arr=Array.isArray(p)?p:[p]; let t=0;
+    arr.forEach((d,i)=>{ if(i%2===0) setTimeout(()=>{ try{ d<=15?H.impact({style:"LIGHT"}):d<=45?H.impact({style:"MEDIUM"}):H.vibrate({duration:d}); }catch(e){} },t); t+=d; });
+    return; }
+  try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){}
+}
+document.addEventListener("pointerdown",()=>ac(),{once:true});
+document.addEventListener("click",e=>{ if(e.target.closest("button,.mini,a")){ SFX.tap(); haptic(8); } },true);
+
+// ================= scoring =================
+function baseScores(a){
+  const sleep=100-Math.abs(7.75-a.sleep)*28, ex=a.exercise/5*100, foc=a.focusMin/40*100, scr=100-(a.screen-1.5)*15;
+  return { body:clamp(sleep*.55+ex*.45), mind:clamp(((10-a.stress)/8.5*100)*.5+((a.mood-1)/4*100)*.5),
+           focus:clamp(foc*.6+scr*.4), pflege:clamp((a.study/10*100)*.5+((a.confidence-1)/8*100)*.5) };
+}
+const potOf = b => Math.min(98, Math.round(b+(100-b)*.7));
+const areaNow = k => Math.min(potOf(S.base[k]), Math.round(S.base[k]+S.areaXP[k]/10));
+const avg = o => Math.round(Object.values(o).reduce((a,b)=>a+b,0)/Object.values(o).length);
+function scores(){ const now={},pot={}; for(const k in AREAS){ now[k]=areaNow(k); pot[k]=potOf(S.base[k]); } return {now,pot,nowAll:avg(now),potAll:avg(pot),startAll:avg(S.base)}; }
+const TIPS = {
+  body:"Your body is your biggest lever. More sleep, daily movement and your push-up / pull-up quests will raise energy, mood and focus at the same time.",
+  mind:"Your stress load is high. Breathwork, memory games and small mind quests are built to calm and sharpen your mind.",
+  focus:"Focus is where you can grow the most. The growing meditation session plus phone-free work blocks train attention like a muscle.",
+  pflege:"Your Ausbildung needs more regular study time. Short daily Pflege quests beat cramming before exams."
+};
+const STRONG = { body:"Your body habits are a real strength.", mind:"Your mind is in a good place, a great base to build on.",
+  focus:"You already focus better than most. Let's sharpen it further.", pflege:"You're on top of your Ausbildung. Use that confidence!" };
+
+// ================= levels, ranks, streaks =================
+const need = l => 60 + 20*l;
+function levelInfo(xp){ let l=1,r=xp; while(r>=need(l)){ r-=need(l); l++; } return {lvl:l,into:r,need:need(l)}; }
+const rankOf = l => l>=85?"S":l>=65?"A":l>=45?"B":l>=25?"C":l>=10?"D":"E";
+const RANK_COL = {E:"#8aa0c4",D:"#2ee6a6",C:"#3fa9ff",B:"#b07cff",A:"#ffd166",S:"#ff4d6d"};
+function medStreak(){
+  const set=new Set(S.med.days), d=new Date();
+  if(!set.has(keyOf(d))){ d.setDate(d.getDate()-1); if(!set.has(keyOf(d))) return 0; }
+  let n=0; while(set.has(keyOf(d))){ n++; d.setDate(d.getDate()-1); } return n;
+}
+const minsForDay = n => n>=10 ? 17 : Math.round(7 + (n-1)*10/9);   // 7 → 17 over 10 days
+function medPlan(){
+  const ms=medStreak(), doneToday=S.med.days.includes(todayKey());
+  const day = doneToday ? ms : ms+1;
+  const mins=minsForDay(Math.max(1,day)), breath=Math.max(2,Math.round(mins*5/17));
+  return {day, mins, breathSec:breath*60, medSec:(mins-breath)*60, total:mins*60, doneToday, ms};
+}
+
+// ================= daily system quests =================
+function genDaily(){
+  const L=levelInfo(S.xp).lvl, t=(lv,a,b)=>Math.round(a+(Math.min(lv,100)-1)*(b-a)/99);
+  const push=t(L,10,100), pull=Math.max(1,t(L,1,20)), squat=t(L,15,100);
+  const memT=Math.min(14,3+Math.floor(L/8)), patT=Math.min(10,5+Math.floor(L/15));
+  const work=t(L,15,90), study=t(L,15,90), words=Math.min(30,5+Math.floor(L/4));
+  const dayIdx=dayDiff("2026-01-01",todayKey()), web=WEB[((dayIdx%WEB.length)+WEB.length)%WEB.length];
+  const plan=medPlan();
+  const items=[
+    {area:"body", kind:"rep", n:"Push-ups", tgt:push+"×", hint:"Split into sets. Knee push-ups are fine to start."},
+    {area:"body", kind:"rep", n:"Pull-ups", tgt:pull+"×", hint:"Can't do one yet? Do slow negatives or a 20 s dead hang instead."},
+    {area:"body", kind:"rep", n:"Squats", tgt:squat+"×", hint:""},
+    {area:"mind", kind:"mem", n:"Visual Memory: clear level", tgt:memT, hint:"In-app memory game", play:"mem"},
+    {area:"mind", kind:"pat", n:"Pattern Recognition: score", tgt:patT+"/10", val:patT, hint:"In-app pattern game", play:"pat"},
+    {area:"mind", kind:"web", n:"Human Benchmark: "+web.n, tgt:"", hint:web.d, url:web.url},
+    {area:"focus",kind:"med", n:"Breathe + meditate", tgt:plan.mins+" min", hint:"Your 10-day challenge session", play:"med"},
+    {area:"focus",kind:"rep", n:"Phone-free deep work", tgt:work+" min", hint:"Phone in another room, one task only."},
+    {area:"pflege",kind:"rep",n:"Study for the Ausbildung", tgt:study+" min", hint:"One Lernfeld, notes or Fallbeispiel."},
+    {area:"pflege",kind:"rep",n:"Learn Fachbegriffe", tgt:words, hint:"Write them down and quiz yourself."}
+  ].map(q=>Object.assign({id:uid(), done:false, xp:q.kind==="med"?60:20}, q));
+  if(plan.doneToday) items.find(q=>q.kind==="med").done=true;
+  return {day:todayKey(), lvl:L, items, cleared:false};
+}
+function completeSys(id, el, auto){
+  const q=S.sys.items.find(x=>x.id===id); if(!q) return;
+  if(q.done){ if(!auto && (q.kind==="rep"||q.kind==="web")){ q.done=false; renderAll(); save(); } return; }
+  q.done=true; S.areaXP[q.area]+=q.xp; SFX.quest(); haptic([20,40,30]);
+  gain(q.xp, el);
+  if(!S.sys.cleared && S.sys.items.every(x=>x.done)){
+    S.sys.cleared=true; S.counts.cleared++;
+    setTimeout(()=>{ SFX.clear(); haptic([60,40,60,40,140]); gain(100);
+      post({type:"clear", e:"🏆", k:"DAILY QUEST", text:"All daily quests cleared", xp:100, grad:"linear-gradient(160deg,#120c02,#5a3f06 55%,#ffd166)"});
+      showSys("QUEST COMPLETE","🏆","DAILY QUEST CLEARED","Reward: +100 XP. Targets grow as you level up. Rest well, Player."); checkBadges(); renderAll(); save(); },700);
+  }
+  checkBadges(); renderAll(); save();
+}
+function autoSys(kind, value){
+  if(!S.sys) return;
+  S.sys.items.filter(q=>q.kind===kind && !q.done && value >= (q.val!==undefined?q.val:q.tgt)).forEach(q=>completeSys(q.id,null,true));
+}
+
+// ================= rollover =================
+function rollover(){
+  const t=todayKey();
+  if(S.doneDay!==t){
+    S.doneDay=t; S.doneToday=0;
+    S.quests.forEach(q=>{ if(q.daily) q.done=false; });
+    S.quests=S.quests.filter(q=>q.daily || !q.done || (q.doneAt && dayDiff(q.doneAt,t)<3));
+  }
+  if(S.lastActive && dayDiff(S.lastActive,t)>1) S.streak=0;
+  if(S.profile && (!S.sys || S.sys.day!==t)) S.sys=genDaily();
+}
+
+// ================= persistence =================
+let ref=null, saveT=null; const LS="levelup-v2";
+const lsGet=()=>{ try{ return JSON.parse(localStorage.getItem(LS)); }catch(e){ return null; } };
+const lsSet=()=>{ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} };
+function save(){ lsSet(); clearTimeout(saveT);
+  saveT=setTimeout(async()=>{ if(!ref) return; try{ await ref.set({json:JSON.stringify(S), updated:Date.now()}); }catch(e){} },700); }
+function load(o){
+  const f=fresh(); S=Object.assign(f,o); S.v=3;
+  ["areaXP","counts","med","rec","settings"].forEach(k=>S[k]=Object.assign(f[k],o[k]||{}));
+  if(o.v!==3) S.sys=null;
+  rollover();
+}
+async function connect(){
+  const local=lsGet(); let shown=false;
+  if(local && local.v>=2){ load(local); start(); shown=true; }
+  const fb=setTimeout(()=>{ if(!shown){ shown=true; start(); } },10000);
+  try{
+    if(!window.claude||!claude.use) throw 0;
+    const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+    if(!db||!user) throw 0;
+    ref=db.collection("data/users/"+(await user.id())).doc("levelup-v2");
+    const snap=await ref.get();
+    let data=snap && typeof snap.data==="function" ? snap.data() : snap;
+    if(snap && snap.exists===false) data=null;
+    if(data && data.json){ const r=JSON.parse(data.json); if(r.v>=2){ load(r); lsSet(); } }
+    else if(S.profile) save();
+  }catch(e){}
+  clearTimeout(fb);
+  if(!shown){ shown=true; start(); } else if(S.profile && !$("main").classList.contains("hidden")) renderAll();
+}
+function start(){
+  $("splash").classList.add("hidden");
+  if(!S.profile){ openOnboarding(); return; }
+  $("main").classList.remove("hidden"); renderAll(); save();
+  // mysterious welcome back
+  const w=document.createElement("div"); w.className="wb";
+  w.innerHTML=`<div style="text-align:center"><div class="r muted" style="letter-spacing:.4em;font-size:12px">[ SYSTEM ]</div>
+    <div class="r glowtxt" style="font-size:26px;margin-top:8px">Welcome back, Player ${esc(S.profile.name)}</div></div>`;
+  document.body.appendChild(w); setTimeout(()=>w.style.opacity=0,1300); setTimeout(()=>w.remove(),2200);
+}
+
+// ================= onboarding =================
+let step=0, draft=null, typing=null;
+function openOnboarding(keep){
+  draft = keep&&S.profile ? {name:S.profile.name,avatar:S.profile.avatar,a:Object.assign({},S.profile.answers)} : {name:"",avatar:"🗡️",a:{}};
+  step = keep?1:0; $("main").classList.add("hidden"); $("ob").classList.remove("hidden"); renderStep();
+}
+function typeLines(el, lines, done){
+  clearInterval(typing); let li=0, ci=0, out="";
+  typing=setInterval(()=>{
+    if(li>=lines.length){ clearInterval(typing); el.innerHTML=out; done&&done(); return; }
+    const L=lines[li];
+    if(ci<L.length){ out+=L[ci++]; if(L[ci-1]!==" ") SFX.type(); }
+    else { out+="\n"; li++; ci=0; }
+    el.innerHTML=esc(out)+'<span class="cursor"></span>';
+  },38);
+}
+function renderStep(){
+  const st=STEPS[step], ob=$("ob");
+  const qN=STEPS.length-3, bars=`<div class="ob-bars">${Array.from({length:qN},(_,i)=>`<i class="${i<step?"on":""}"></i>`).join("")}</div>`;
+  if(st.k==="intro"){
+    ob.innerHTML=`<div class="awaken" id="awaken"><div><div class="r glowtxt" style="font-size:13px;letter-spacing:.6em;margin-bottom:22px">LEVEL UP</div><p>TAP TO AWAKEN</p></div></div>
+      <div class="ob-body" style="justify-content:center"><div class="sys"><div class="sys-h"><span>NOTIFICATION</span></div>
+      <div class="typer glowtxt" id="typer"></div><div id="accept" class="hidden"><button class="cta" data-next>Accept</button><button class="cta ghost" id="decline">Decline</button></div></div></div>`;
+    $("awaken").addEventListener("click",()=>{
+      ac(); droneStart(); SFX.system(); haptic([30,60,30]);
+      $("awaken").style.transition="opacity 1.2s"; $("awaken").style.opacity=0; setTimeout(()=>$("awaken")&&$("awaken").remove(),1200);
+      setTimeout(()=>typeLines($("typer"),["[SYSTEM]","","You have met the requirements","to become a Player.","","Your daily quests will make you stronger","in body, mind, focus and skill.","","Do you accept?"],()=>{ $("accept").classList.remove("hidden"); SFX.system(); }),900);
+    });
+    return;
+  }
+  let html="";
+  if(st.k==="name"){
+    html=`${bars}<div class="ob-body"><div class="sys-h" style="justify-content:flex-start"><span>PLAYER REGISTRATION</span></div>
+      <p class="ob-q">What is your name, Player?</p><p class="ob-sub">Choose your emblem too.</p>
+      <input class="txt" id="obName" maxlength="24" placeholder="Your name" value="${esc(draft.name)}" autocomplete="off">
+      <div class="avatars">${AVATARS.map(a=>`<button class="av ${a===draft.avatar?"on":""}" data-av="${a}">${a}</button>`).join("")}</div>
+      <div style="flex:1"></div><button class="cta" data-next ${draft.name.trim()?"":"disabled"} id="obNext">Continue</button></div>`;
+  } else if(st.k==="analyse"){
+    html=`<div class="scan"><div><div class="ring-spin"></div><div class="r glowtxt" style="font-size:22px;letter-spacing:.2em">ANALYSING PLAYER</div>
+      <p class="ob-sub r" id="anTxt" style="letter-spacing:.14em;margin-top:8px">Reading physical condition…</p></div></div>`;
+    [["Measuring mental state…",700],["Scanning focus capacity…",1400],["Calculating hidden potential…",2100]].forEach(([t,ms])=>setTimeout(()=>{ const e=$("anTxt"); if(e){ e.textContent=t; SFX.type(); } },ms));
+    setTimeout(()=>{ finishAssessment(); step++; renderStep(); },2900);
+  } else if(st.k==="result"){
+    droneStop(); SFX.level(); haptic([40,40,40,40,120]);
+    const sc=scores(), ks=Object.keys(AREAS);
+    const low=ks.reduce((a,b)=>S.base[a]<=S.base[b]?a:b), high=ks.reduce((a,b)=>S.base[a]>=S.base[b]?a:b);
+    html=`<div class="ob-body"><div class="sys" style="margin:0">
+      <div class="sys-h"><span>STATUS</span></div>
+      <div style="text-align:center" class="r muted">PLAYER <b style="color:var(--text)">${esc(S.profile.name.toUpperCase())}</b> · RANK <b style="color:${RANK_COL.E}">E</b> · LV 1</div>
+      <div class="gauge">${gaugeSVG(190,10,0,"rg")}<div class="lbl"><div><small>HIDDEN POTENTIAL</small><b class="glowtxt" id="gNum">0</b><small>/ 100</small></div></div></div>
+      <div class="pot-row"><div class="pot"><b>${sc.startAll}</b><span>Current power</span></div><div class="pot"><b class="glowtxt">+${sc.potAll-sc.startAll}</b><span>Locked potential</span></div></div>
+      <div class="areas">${areaRows(S.base,sc.pot,true)}</div></div>
+      <div class="insight"><b>⚠️ Weakest stat: ${AREAS[low].stat} (${AREAS[low].label})</b>${TIPS[low]}</div>
+      <div class="insight"><b>💎 Strongest stat: ${AREAS[high].stat} (${AREAS[high].label})</b>${STRONG[high]}</div>
+      <div class="insight"><b>📜 First mission</b>Complete the focus session 10 days in a row. It starts at 7 minutes and grows to 17.</div>
+      <p class="small muted" style="margin:12px 2px 0">This score is a motivation tool based on your answers, not a medical or psychological test.</p>
+      <button class="cta" data-finish>Enter the System</button></div>`;
+    setTimeout(()=>animateGauge(sc.potAll),200);
+  } else {
+    html=`${bars}<div class="ob-body"><div class="sys-h" style="justify-content:flex-start"><span>ASSESSMENT ${step-1}/${STEPS.length-4}</span></div>
+      <div class="ob-emoji">${st.e}</div><p class="ob-q">${st.q}</p><p class="ob-sub">${st.s||"&nbsp;"}</p>
+      <div class="opts">${st.o.map(([l,v])=>`<button class="opt ${draft.a[st.k]===v?"on":""}" data-val="${v}">${l}</button>`).join("")}</div>
+      <div style="flex:1"></div><button class="back" data-back>Back</button></div>`;
+  }
+  ob.innerHTML=html;
+  const n=$("obName"); if(n){ n.focus(); n.addEventListener("input",()=>{ draft.name=n.value; $("obNext").disabled=!n.value.trim(); }); }
+}
+$("ob").addEventListener("click",e=>{
+  const t=e.target.closest("button"); if(!t) return;
+  if(t.id==="decline"){ SFX.error(); haptic([80,50,80]); typeLines($("typer"),["[SYSTEM]","","Declining is not possible.","Your journey has already begun."],()=>{ $("decline").remove(); }); return; }
+  if(t.dataset.av){ draft.avatar=t.dataset.av; document.querySelectorAll(".av").forEach(b=>b.classList.toggle("on",b===t)); return; }
+  if(t.hasAttribute("data-next")){ clearInterval(typing); step++; renderStep(); return; }
+  if(t.hasAttribute("data-back")){ step=Math.max(1,step-1); renderStep(); return; }
+  if(t.dataset.val!==undefined){ draft.a[STEPS[step].k]=Number(t.dataset.val); t.classList.add("on"); setTimeout(()=>{ step++; renderStep(); },200); return; }
+  if(t.hasAttribute("data-finish")){ $("ob").classList.add("hidden"); $("main").classList.remove("hidden"); go("home"); renderAll(); shards(); SFX.system(); }
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Enter" && e.target.id==="obName" && draft.name.trim()){ step++; renderStep(); } });
+function finishAssessment(){
+  const first=!S.profile;
+  S.profile={name:draft.name.trim(),avatar:draft.avatar,answers:draft.a,year:draft.a.year,created:S.profile?S.profile.created:Date.now()};
+  S.base=baseScores(draft.a);
+  if(first) post({type:"welcome",e:"👁️",k:"AWAKENING",text:`${S.profile.name} became a Player`,grad:"linear-gradient(160deg,#02040c,#0b1d45 55%,#3fa9ff)"});
+  rollover(); save();
+}
+
+// ================= gauges =================
+function gaugeSVG(size,w,pct,id){
+  const r=(size-w)/2, c=2*Math.PI*r;
+  return `<svg width="${size}" height="${size}"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#8fe9ff"/><stop offset=".5" stop-color="#3fa9ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#0f2242" stroke-width="${w}"/>
+    <circle class="arc" cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="url(#${id})" stroke-width="${w}" stroke-linecap="round"
+      stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct/100)}" style="transition:stroke-dashoffset 1.6s cubic-bezier(.2,.9,.3,1);filter:drop-shadow(0 0 6px #3fa9ff)"/></svg>`;
+}
+function animateGauge(target){
+  const arc=document.querySelector(".gauge .arc"), num=$("gNum"); if(!arc) return;
+  const c=parseFloat(arc.getAttribute("stroke-dasharray")); arc.style.strokeDashoffset=c*(1-target/100);
+  const t0=performance.now(); (function f(t){ const p=Math.min(1,(t-t0)/1600); num.textContent=Math.round(target*(1-Math.pow(1-p,3))); if(p<1) requestAnimationFrame(f); })(t0);
+}
+function areaRows(now,pot,startOnly){
+  return Object.entries(AREAS).map(([k,a])=>`<div class="area-row"><span class="k">${a.emoji} ${a.stat}</span>
+    <div class="track"><div class="pot-mark" style="width:${pot[k]}%"></div><div class="fill" style="width:${now[k]}%;background:${a.color};box-shadow:0 0 8px ${a.color}"></div></div>
+    <span style="text-align:right" class="r">${now[k]}<span class="muted">/${pot[k]}</span></span></div>`).join("") +
+    `<div class="small muted">STR body · INT mind · PER focus · SKL Pflege. Bright bar = ${startOnly?"now":"today"}, striped = potential</div>`;
+}
+
+// ================= core actions =================
+function post(p){ S.feed.unshift(Object.assign({id:uid(),ts:Date.now(),liked:false},p)); S.feed=S.feed.slice(0,60); }
+function gain(xp, el){
+  const before=levelInfo(S.xp).lvl; S.xp+=xp;
+  const t=todayKey();
+  if(S.lastActive!==t){ S.streak=(S.lastActive&&dayDiff(S.lastActive,t)===1)?S.streak+1:1; S.lastActive=t; S.best=Math.max(S.best,S.streak); }
+  floatText("+"+xp+" XP", el);
+  const after=levelInfo(S.xp).lvl;
+  if(after>before){
+    const rb=rankOf(before), ra=rankOf(after);
+    post({type:"level",e:"⚡",k:"LEVEL UP",text:`Reached level ${after}`,grad:"linear-gradient(160deg,#02040c,#1a1466 55%,#8b5cf6)"});
+    setTimeout(()=>{ SFX.level(); haptic([50,40,50,40,160]);
+      showSys("NOTIFICATION","⚡","LEVEL UP!", ra!==rb ? `Level ${after}. Rank up: ${rb} → ${ra}. Your daily quests grow stronger tomorrow.` : `You reached level ${after}. Your daily quests grow stronger tomorrow.`); },400);
+  }
+}
+function completeQuest(id, el){
+  const q=S.quests.find(x=>x.id===id); if(!q) return;
+  if(q.done){ q.done=false; renderAll(); save(); return; }
+  const snap=JSON.stringify(S), xp=SIZES[q.size].xp;
+  q.done=true; q.doneAt=todayKey(); S.doneToday++; S.areaXP[q.cat]+=xp; S.counts.quests++; S.counts[q.cat]++;
+  post({type:"quest",cat:q.cat,e:AREAS[q.cat].emoji,k:"QUEST COMPLETE",text:q.title,xp,grad:AREAS[q.cat].grad});
+  SFX.quest(); haptic([20,40,30]); gain(xp,el); checkBadges();
+  showToast("Quest complete · +"+xp+" XP",()=>{ S=JSON.parse(snap); renderAll(); save(); });
+  renderAll(); save();
+}
+const BADGES = [
+  ["first","🌱","First quest",()=>S.counts.quests>=1],
+  ["clear1","📜","Daily cleared",()=>S.counts.cleared>=1],
+  ["clear10","🏯","10 days cleared",()=>S.counts.cleared>=10],
+  ["s7","🔥","7-day streak",()=>S.best>=7],
+  ["m1","🧘","First session",()=>S.med.total>=1],
+  ["m10","🎯","Focus Master",()=>S.med.best>=10],
+  ["mem8","🧩","Memory lv 8",()=>S.rec.mem>=8],
+  ["pat10","🔷","Perfect 10/10",()=>S.rec.pat>=10],
+  ["rD","🟢","D-Rank",()=>levelInfo(S.xp).lvl>=10],
+  ["rB","🟣","B-Rank",()=>levelInfo(S.xp).lvl>=45],
+  ["rS","🔴","S-Rank",()=>levelInfo(S.xp).lvl>=85],
+  ["lv100","👑","Lv 100 · 100 push-ups",()=>levelInfo(S.xp).lvl>=100]
+];
+function checkBadges(){
+  BADGES.forEach(([id,e,n,ok])=>{ if(!S.badges.includes(id)&&ok()){ S.badges.push(id);
+    post({type:"badge",e,k:"TITLE ACQUIRED",text:n,grad:"linear-gradient(160deg,#120c02,#5a3f06 55%,#ffd166)"});
+    setTimeout(()=>{ SFX.system(); showToast("🏅 Title acquired: "+n); },1500); } });
+}
+
+// ================= render =================
+function renderAll(){
+  if(!S.profile) return;
+  rollover();
+  const L=levelInfo(S.xp), sc=scores(), plan=medPlan(), rk=rankOf(L.lvl);
+  $("pStreak").textContent="🔥 "+S.streak;
+  $("pLevel").innerHTML=`<span style="color:${RANK_COL[rk]}">${rk}</span> · LV ${L.lvl}`;
+  $("sndBtn").textContent=S.settings.sound?"🔊":"🔇";
+
+  // stories
+  const st=[`<button class="story" data-go="add"><div class="ring seen"><div><div>${S.profile.avatar}<span class="plus">+</span></div></div></div><span>New quest</span></button>`,
+    `<button class="story" data-train="med"><div class="ring ${plan.doneToday?"seen":""}"><div><div>🧘</div></div></div><span>${plan.doneToday?"Done ✓":plan.mins+" min focus"}</span></button>`,
+    `<button class="story" data-train="mem"><div class="ring ${S.sys.items.find(q=>q.kind==="mem").done?"seen":""}"><div><div>🧩</div></div></div><span>Memory</span></button>`,
+    `<button class="story" data-train="pat"><div class="ring ${S.sys.items.find(q=>q.kind==="pat").done?"seen":""}"><div><div>🔷</div></div></div><span>Patterns</span></button>`];
+  for(const k in AREAS) st.push(`<button class="story" data-area="${k}"><div class="ring seen"><div><div>${AREAS[k].emoji}</div></div></div><span>${AREAS[k].stat} ${sc.now[k]}</span></button>`);
+  $("stories").innerHTML=st.join("");
+
+  // daily quest panel
+  const items=S.sys.items, done=items.filter(q=>q.done).length;
+  let dq=`<div class="sys-h"><span>DAILY QUEST</span></div><div class="dq-goal">TRAINING TO BECOME STRONGER · LV ${S.sys.lvl}</div>`;
+  for(const k in AREAS){
+    dq+=`<div class="dq-area" style="color:${AREAS[k].color}">${AREAS[k].emoji} ${AREAS[k].stat} · ${AREAS[k].label.toUpperCase()}</div>`;
+    items.filter(q=>q.area===k).forEach(q=>{
+      const right = q.kind==="web" ? `<a class="mini" href="${q.url}" target="_blank" rel="noopener">OPEN ↗</a>` :
+                    q.play ? (q.done?"":`<button class="mini" data-train="${q.play}">${q.kind==="med"?"START":"PLAY"}</button>`) : "";
+      const manual = q.kind==="rep"||q.kind==="web";
+      dq+=`<div class="dq ${q.done?"done":""}">${manual?`<button class="box" data-sys="${q.id}" aria-label="Done">${q.done?"✓":""}</button>`:`<span class="box">${q.done?"✓":""}</span>`}
+        <div class="n">${esc(q.n)}${q.hint?`<small>${esc(q.hint)}</small>`:""}</div><span class="tgt">${q.tgt}</span>${right}</div>`;
+    });
+  }
+  dq+=`<div class="prog"><i style="width:${done/items.length*100}%"></i></div>
+    <div class="dq-foot"><span>${done}/${items.length} complete</span><span>${S.sys.cleared?"✓ Reward claimed":"Clear all: <b style='color:var(--gold)'>+100 XP</b>"}</span></div>
+    <div class="warn">At level 100: 100 push-ups, 20 pull-ups and 100 squats a day. Targets grow a little every level. Listen to your body and skip anything that hurts.</div>`;
+  $("dailyPanel").innerHTML=dq;
+
+  // challenge
+  const prog=Math.min(10,plan.ms);
+  $("challengeCard").innerHTML=`<div class="sys-h"><span>10-DAY FOCUS CHALLENGE</span></div>
+    <div style="font-size:18px;font-weight:800">${prog>=10?"Challenge complete 🏆":plan.doneToday?`Day ${prog} cleared. Return tomorrow.`:`Day ${Math.min(10,prog+1)}: ${plan.mins}-minute session`}</div>
+    <div class="small muted" style="margin-top:4px">Starts at 7 min and grows to 17 min of breathwork + meditation.</div>
+    ${dotsHTML(prog, !plan.doneToday)}
+    <div class="row" style="margin-top:0"><button class="btn p" data-train="med">${plan.doneToday?"Extra session":"▶ Begin session"}</button></div>`;
+
+  // score
+  $("scoreCard").innerHTML=`<div class="score-row"><div class="mini-gauge">${gaugeSVG(76,7,sc.nowAll,"mg")}<b class="glowtxt">${sc.nowAll}</b></div>
+    <div><div style="font-weight:800;font-size:16px">Power level</div><div class="muted small">Started at ${sc.startAll} · potential <b style="color:var(--cyan)">${sc.potAll}</b></div>
+    <div class="small" style="margin-top:4px;font-weight:700">${sc.potAll-sc.nowAll>0?`${sc.potAll-sc.nowAll} points of potential still locked`:"Full potential unlocked 👑"}</div></div></div>
+    <div class="areas">${areaRows(sc.now,sc.pot)}</div>`;
+
+  // own quests
+  const open=S.quests.filter(q=>!q.done).slice(0,4);
+  $("todayList").innerHTML=open.length?open.map(questRow).join(""):
+    `<div class="empty"><b>📜</b>${S.quests.length?"All your quests are done!":"Create your own quests for STR, INT, PER and SKL."}<br><button class="chip" style="margin-top:10px" data-go="add">＋ Create a quest</button></div>`;
+
+  // feed
+  $("feed").innerHTML=S.feed.map(p=>`<article class="post">
+    <div class="post-h"><div class="av-s"><div>${S.profile.avatar}</div></div><div style="flex:1"><b style="font-size:14px">${esc(S.profile.name)}</b><div class="muted small">${timeAgo(p.ts)}${p.cat?" · "+AREAS[p.cat].stat:""}</div></div></div>
+    <div class="post-img" style="background:${p.grad}">${p.xp?`<span class="xp">+${p.xp} XP</span>`:""}<div><div class="k">[ ${p.k||"SYSTEM"} ]</div><div class="e">${p.e}</div><div class="t">${esc(p.text)}</div></div></div>
+    <div class="post-a"><button class="heart ${p.liked?"on":""}" data-like="${p.id}">${p.liked?"💙":"🤍"}</button><span class="muted">${p.liked?"Proud of this":"Tap to celebrate"}</span></div></article>`).join("");
+
+  renderQuests(); renderTrainStatic(); renderProfile();
+}
+function dotsHTML(prog,nextOpen){ return `<div class="dots">${Array.from({length:10},(_,i)=>`<i class="${i<prog?"on":(i===prog&&nextOpen?"next":"")}">${i<prog?"✓":minsForDay(i+1)+"′"}</i>`).join("")}</div>`; }
+function questRow(q){ const a=AREAS[q.cat];
+  return `<div class="q ${q.done?"done":""}" data-qid="${q.id}"><button class="chk" data-act="chk" aria-label="Complete">${q.done?"✓":""}</button>
+    <div class="qt">${esc(q.title)}${q.daily?' <span class="small muted">🔁</span>':""}</div>
+    <span class="tag" style="color:${a.color}">${a.stat} +${SIZES[q.size].xp}</span><button class="x" data-act="del" aria-label="Delete">×</button></div>`; }
+
+// ---- quests view ----
+let fCat="body", fSize="tiny", fDaily=false, filter="all";
+function renderQuests(){
+  $("catChips").innerHTML=Object.entries(AREAS).map(([k,a])=>`<button type="button" class="chip ${k===fCat?"on":""}" data-cat="${k}">${a.emoji} ${a.stat} · ${a.label}</button>`).join("");
+  $("ideas").innerHTML=IDEAS[fCat].map(t=>`<button type="button" class="chip idea" data-idea="${esc(t)}">${esc(t)}</button>`).join("");
+  $("sizeChips").innerHTML=Object.entries(SIZES).map(([k,s])=>`<button type="button" class="chip ${k===fSize?"on":""}" data-size="${k}">${s.label}</button>`).join("");
+  $("dailyChip").classList.toggle("on",fDaily);
+  const fs=[["all","All"],...Object.entries(AREAS).map(([k,a])=>[k,a.emoji+" "+a.stat]),["done","✓ Done"]];
+  $("filterChips").innerHTML=fs.map(([k,l])=>`<button class="chip ${k===filter?"on":""}" data-filter="${k}">${l}</button>`).join("");
+  const list=S.quests.filter(q=>filter==="done"?q.done:filter==="all"?!q.done:(q.cat===filter&&!q.done));
+  $("questList").innerHTML=list.length?list.map(questRow).join(""):`<div class="empty"><b>${filter==="done"?"🏁":"📜"}</b>${filter==="done"?"Finished quests appear here.":"No quests here yet. Register one above."}</div>`;
+}
+$("addForm").addEventListener("submit",e=>{ e.preventDefault(); const v=$("qInput").value.trim(); if(!v){ $("qInput").focus(); SFX.error(); return; }
+  S.quests.unshift({id:uid(),title:v,cat:fCat,size:fSize,daily:fDaily,done:false}); $("qInput").value=""; filter="all";
+  SFX.system(); haptic(20); renderAll(); save(); showToast("Quest registered ✓"); });
+$("addForm").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.cat){ fCat=b.dataset.cat; renderQuests(); }
+  if(b.dataset.size){ fSize=b.dataset.size; renderQuests(); }
+  if(b.dataset.idea){ $("qInput").value=b.dataset.idea; $("qInput").focus(); }
+  if(b.id==="dailyChip"){ fDaily=!fDaily; b.classList.toggle("on",fDaily); } });
+$("filterChips").addEventListener("click",e=>{ const b=e.target.closest("[data-filter]"); if(b){ filter=b.dataset.filter; renderQuests(); } });
+
+// ---- train: meditation ----
+let sess=null, raf=null;
+function renderTrainStatic(){
+  const plan=medPlan(), prog=Math.min(10,plan.ms);
+  if(!sess){
+    $("medTitle").textContent=`Breathe + Meditate · ${plan.mins} min`;
+    $("medSub").textContent=`${plan.breathSec/60} min cyclic sighing → ${plan.medSec/60} min meditation${plan.doneToday?" · today done ✓":` · challenge day ${Math.min(plan.day,10)}`}`;
+    $("clock").textContent=fmt(plan.total);
+    const tpl=`${plan.breathSec/60}fr ${plan.medSec/60}fr`; $("phases").style.gridTemplateColumns=tpl; $("phaseL").style.gridTemplateColumns=tpl;
+  }
+  $("ladder").innerHTML=Array.from({length:10},(_,i)=>`<div class="${i+1===Math.min(plan.day,10)?"on":""}"><b>${minsForDay(i+1)}</b>D${i+1}</div>`).join("");
+  $("dotsF").outerHTML=dotsHTML(prog,!plan.doneToday).replace('class="dots"','class="dots" id="dotsF" style="margin-top:12px"');
+  $("chTxt").textContent= prog>=10?`Challenge complete! Best streak: ${S.med.best} days. Keep the 17 min going.`:
+    plan.doneToday?`Today cleared ✓ ${10-prog} day${10-prog===1?"":"s"} to go. Best: ${S.med.best}`:
+    plan.ms>0?`Keep your ${plan.ms}-day streak alive. Today: ${plan.mins} min.`:"Missing a day restarts the challenge at 7 min.";
+  $("memBest").textContent=S.rec.mem; $("patBest").textContent=S.rec.pat;
+  $("webList").innerHTML=WEB.map(w=>`<a class="link" href="${w.url}" target="_blank" rel="noopener"><span class="ic">${w.e}</span><div style="flex:1"><b>${w.n}</b><span>${w.d}</span></div><span class="mini">OPEN ↗</span></a>`).join("")+
+    `<div class="small muted" style="margin-top:10px">Today's website quest: <b style="color:var(--text)">${esc(S.sys.items.find(q=>q.kind==="web").n.replace("Human Benchmark: ",""))}</b>. Tick it off on the home screen when you're done.</div>`;
+}
+const fmt=s=>pad(Math.floor(s/60))+":"+pad(Math.floor(s%60));
+function sessTick(){
+  if(!sess||!sess.running) return;
+  const el=sess.acc+(Date.now()-sess.t0)/1000, left=Math.max(0,sess.total-el);
+  $("clock").textContent=fmt(Math.ceil(left));
+  $("ph1").style.width=Math.min(100,el/sess.breath*100)+"%";
+  $("ph2").style.width=Math.max(0,Math.min(100,(el-sess.breath)/(sess.total-sess.breath)*100))+"%";
+  const orb=$("orb"), txt=$("orbTxt");
+  if(el<sess.breath){
+    const c=el%9; let s,l, ph;
+    if(c<2){ s=.6+.25*(c/2); l="INHALE"; ph=0; } else if(c<3){ s=.85+.15*(c-2); l="INHALE AGAIN"; ph=1; } else { s=1-.4*((c-3)/6); l="LONG EXHALE…"; ph=2; }
+    if(ph!==sess.ph){ sess.ph=ph; haptic(ph===2?40:15); }
+    orb.style.transform=`scale(${s})`; txt.textContent=l;
+  } else {
+    if(!sess.switched){ sess.switched=true; SFX.bell(440); haptic([60,80,60]); }
+    orb.style.transform=`scale(${.78+.06*Math.sin((el-sess.breath)/8*Math.PI*2)})`; txt.textContent="FOCUS · RETURN GENTLY";
+  }
+  if(left<=0){ finishSession(true); return; }
+  raf=requestAnimationFrame(sessTick);
+}
+$("sStart").addEventListener("click",()=>{
+  ac();
+  if(!sess){ const p=medPlan(); sess={acc:0,t0:Date.now(),running:true,switched:false,ph:-1,breath:p.breathSec,total:p.total,mins:p.mins};
+    SFX.bell(); haptic(30); $("sEnd").classList.remove("hidden"); $("sStart").textContent="Pause"; sessTick(); return; }
+  if(sess.running){ sess.acc+=(Date.now()-sess.t0)/1000; sess.running=false; cancelAnimationFrame(raf); $("sStart").textContent="Resume"; $("orbTxt").textContent="PAUSED"; }
+  else { sess.t0=Date.now(); sess.running=true; $("sStart").textContent="Pause"; sessTick(); }
+});
+$("sEnd").addEventListener("click",()=>finishSession(false));
+function finishSession(full){
+  if(!sess) return;
+  const el=sess.acc+(sess.running?(Date.now()-sess.t0)/1000:0), mins=sess.mins;
+  cancelAnimationFrame(raf); sess=null;
+  $("sStart").textContent="Begin"; $("sEnd").classList.add("hidden"); $("ph1").style.width="0"; $("ph2").style.width="0";
+  $("orb").style.transform="scale(.6)"; $("orbTxt").textContent="READY";
+  if(full){
+    SFX.bell(660); setTimeout(()=>SFX.bell(880),700); haptic([80,60,80,60,200]);
+    const t=todayKey(), first=!S.med.days.includes(t);
+    if(first) S.med.days.push(t); S.med.days=S.med.days.slice(-90); S.med.total++;
+    const ms=medStreak(); S.med.best=Math.max(S.med.best,ms);
+    const xp=first?60:30;
+    if(first){ const mq=S.sys.items.find(q=>q.kind==="med"); if(mq && !mq.done) completeSys(mq.id,$("clock"),true); else { S.areaXP.focus+=xp; gain(xp,$("clock")); } }
+    else { S.areaXP.focus+=xp; gain(xp,$("clock")); }
+    S.areaXP.mind+=20;
+    post({type:"session",cat:"focus",e:"🧘",k:"FOCUS TRAINING",text:first?`Day ${Math.min(ms,10)} of 10 · ${mins} min session`:`Extra ${mins}-min session`,xp,grad:"linear-gradient(160deg,#02040c,#0b2a66 55%,#8b5cf6)"});
+    checkBadges();
+    if(first && ms===10) showSys("NOTIFICATION","🎯","CHALLENGE COMPLETE","10 days in a row. Your focus has grown stronger. Title acquired: Focus Master.");
+    else showSys("NOTIFICATION","🧘","SESSION COMPLETE", first?`Day ${Math.min(ms,10)} of 10 cleared. Tomorrow: ${minsForDay(Math.min(ms+1,10))} minutes.`:`+${xp} XP for an extra session.`);
+  } else if(el>=60){
+    const m=Math.floor(el/60), xp=Math.min(30,m*2); S.areaXP.focus+=xp/2; gain(xp,$("clock"));
+    showToast(`${m} min done · +${xp} XP. Finish the full session to count the day.`);
+  } else showToast("Session ended. Begin again anytime.");
+  renderAll(); save();
+}
+
+// ---- train: visual memory ----
+let mem=null;
+function memStart(){ mem={level:1,lives:3}; $("memStart").classList.add("hidden"); memRound(); }
+function memRound(){
+  const n=mem.level+2, size=n<=4?3:n<=7?4:n<=11?5:n<=16?6:7;
+  const cells=shuffle([...Array(size*size).keys()]).slice(0,n);
+  Object.assign(mem,{n,size,targets:new Set(cells),found:new Set(),misses:0,phase:"show"});
+  const g=$("memGrid"); g.style.gridTemplateColumns=`repeat(${size},1fr)`;
+  g.innerHTML=Array.from({length:size*size},(_,i)=>`<button class="tile ${mem.targets.has(i)?"show":""}" data-t="${i}"></button>`).join("");
+  $("memLvl").textContent=mem.level; $("memLives").textContent="♥".repeat(mem.lives)+"♡".repeat(3-mem.lives); $("memMsg").textContent="Memorise…";
+  SFX.system();
+  setTimeout(()=>{ if(!mem) return; g.querySelectorAll(".tile").forEach(t=>t.classList.remove("show")); mem.phase="input"; $("memMsg").textContent="Now tap them!"; },1100+n*90);
+}
+$("memGrid").addEventListener("click",e=>{
+  const t=e.target.closest(".tile"); if(!t||!mem||mem.phase!=="input") return;
+  const i=+t.dataset.t; if(mem.found.has(i)||t.classList.contains("miss")) return;
+  if(mem.targets.has(i)){ mem.found.add(i); t.classList.add("hit"); SFX.hit(); haptic(12);
+    if(mem.found.size===mem.n){ mem.phase="wait"; mem.level++; SFX.quest(); haptic([20,30,20]); $("memMsg").textContent="Level cleared!";
+      autoSys("mem", mem.level-1); setTimeout(memRound,800); }
+  } else { t.classList.add("miss"); mem.misses++; SFX.error(); haptic(70);
+    if(mem.misses>=3){ mem.lives--; mem.phase="wait";
+      if(mem.lives<=0) return memEnd();
+      $("memMsg").textContent="Life lost. Same level again."; setTimeout(memRound,1000); } }
+});
+function memEnd(){
+  const cleared=mem.level-1, xp=Math.min(40,cleared*3); mem=null;
+  S.rec.mem=Math.max(S.rec.mem,cleared); S.areaXP.mind+=xp;
+  $("memMsg").textContent=`Game over · cleared ${cleared} level${cleared===1?"":"s"}`; $("memStart").textContent="Play again"; $("memStart").classList.remove("hidden");
+  $("memLives").textContent="♡♡♡";
+  if(xp>0) gain(xp,$("memGrid"));
+  post({type:"game",cat:"mind",e:"🧩",k:"VISUAL MEMORY",text:`Cleared ${cleared} level${cleared===1?"":"s"}`,xp,grad:AREAS.mind.grad});
+  autoSys("mem",cleared); checkBadges(); renderAll(); save();
+}
+$("memStart").addEventListener("click",memStart);
+
+// ---- train: patterns ----
+const SYMS=["🔵","🔺","⭐","🟩","🌙","💎","🔶"];
+function genPattern(d){
+  const types = d<3?[0,1,6,7]: d<6?[0,1,2,5,6,7]:[0,1,2,3,4,5,6,7];
+  const t=pick(types); let seq=[], ans, opts;
+  const numOpts=a=>{ const c=new Set(); [a+1,a-1,a+2,a-2,a+3,a+5,a-5,a+10,Math.round(a*1.5),a*2].forEach(x=>{ if(x!==a) c.add(x); }); return shuffle([...c]).slice(0,3).concat(a); };
+  if(t===0){ const a=rnd(1,30), k=pick([2,3,4,5,6,7,8,9,-3,-4]); for(let i=0;i<5;i++) seq.push(a+i*k+(k<0?60:0)); ans=seq[4]+k; }
+  if(t===1){ let x=rnd(10,30); const p=rnd(3,9), q=rnd(1,4); for(let i=0;i<6;i++){ seq.push(x); x+= i%2===0?p:-q; } ans=x; }
+  if(t===2){ const a=rnd(1,4), m=pick([2,3]); for(let i=0;i<5;i++) seq.push(a*Math.pow(m,i)); ans=a*Math.pow(m,5); }
+  if(t===3){ const s=rnd(1,6); for(let i=0;i<5;i++) seq.push((s+i)*(s+i)); ans=(s+5)*(s+5); }
+  if(t===4){ let a=rnd(1,4), b=rnd(2,6); seq=[a,b]; for(let i=0;i<4;i++){ seq.push(seq[seq.length-1]+seq[seq.length-2]); } ans=seq[5]+seq[4]; }
+  if(t===5){ let x=rnd(1,10), dd=rnd(1,3); for(let i=0;i<5;i++){ seq.push(x); x+=dd; dd++; } ans=x; }
+  if(t<6){ opts=shuffle(numOpts(ans)).map(String); return {seq:seq.map(String),ans:String(ans),opts}; }
+  if(t===6){ const pool=shuffle(SYMS.slice()).slice(0,3), motif=pick([[0,1],[0,1,1],[0,1,2],[0,0,1,2],[0,1,2,1]]).map(i=>pool[i]);
+    const len=pick([6,7]); for(let i=0;i<len;i++) seq.push(motif[i%motif.length]); ans=motif[len%motif.length];
+    const others=SYMS.filter(s=>s!==ans); opts=shuffle([ans,...shuffle(others).slice(0,3)]); return {seq,ans,opts}; }
+  const st=rnd(0,10), k=rnd(1,3), A="ABCDEFGHIJKLMNOPQRSTUVWXYZ"; for(let i=0;i<5;i++) seq.push(A[st+i*k]); ans=A[st+5*k];
+  const idx=st+5*k, c=new Set(); [idx+1,idx-1,idx+2,idx-2,idx+k+1].forEach(x=>{ if(x>=0&&x<26&&x!==idx) c.add(A[x]); });
+  opts=shuffle([ans,...shuffle([...c]).slice(0,3)]); return {seq,ans,opts};
+}
+let pat=null, patTimer=null;
+function patStart(){ pat={q:0,score:0}; $("patStartRow").classList.add("hidden"); patNext(); }
+function patNext(){
+  if(pat.q>=10) return patEnd();
+  pat.cur=genPattern(pat.q); pat.q++; pat.locked=false;
+  $("patQ").textContent=pat.q+"/10"; $("patScore").textContent=pat.score;
+  $("patBox").innerHTML=`<div class="seq">${pat.cur.seq.map(s=>`<span>${s}</span>`).join("")}<span class="q">?</span></div>
+    <div class="answers">${pat.cur.opts.map(o=>`<button data-ans="${esc(o)}">${o}</button>`).join("")}</div><div class="timer"><i id="patBar" style="width:100%"></i></div>`;
+  const t0=Date.now(); clearInterval(patTimer);
+  patTimer=setInterval(()=>{ const p=1-(Date.now()-t0)/20000; const b=$("patBar"); if(b) b.style.width=Math.max(0,p*100)+"%"; if(p<=0) patAnswer(null); },100);
+}
+function patAnswer(v){
+  if(!pat||pat.locked) return; pat.locked=true; clearInterval(patTimer);
+  const ok=v===pat.cur.ans;
+  document.querySelectorAll("#patBox .answers button").forEach(b=>{ if(b.dataset.ans===pat.cur.ans) b.classList.add("right"); else if(b.dataset.ans===v) b.classList.add("wrong"); });
+  if(ok){ pat.score++; SFX.hit(); haptic(15); } else { SFX.error(); haptic(70); }
+  $("patScore").textContent=pat.score; setTimeout(patNext, ok?600:1300);
+}
+$("patBox").addEventListener("click",e=>{ const b=e.target.closest("[data-ans]"); if(b) patAnswer(b.dataset.ans); });
+function patEnd(){
+  const sc=pat.score, xp=sc*3; pat=null;
+  S.rec.pat=Math.max(S.rec.pat,sc); S.areaXP.mind+=xp;
+  $("patBox").innerHTML=`<div class="empty"><b>${sc>=8?"🏆":sc>=5?"🔷":"🌀"}</b>You scored <b style="color:var(--cyan);display:inline">${sc}/10</b></div>`;
+  $("patStart").textContent="Play again"; $("patStartRow").classList.remove("hidden"); $("patQ").textContent="–";
+  if(sc>=8){ SFX.clear(); } else SFX.system();
+  if(xp>0) gain(xp,$("patBox"));
+  post({type:"game",cat:"mind",e:"🔷",k:"PATTERN RECOGNITION",text:`Scored ${sc}/10`,xp,grad:AREAS.mind.grad});
+  autoSys("pat",sc); checkBadges(); renderAll(); save();
+}
+$("patStart").addEventListener("click",patStart);
+
+function openTrain(p){
+  go("train");
+  document.querySelectorAll("#seg button").forEach(b=>b.classList.toggle("on",b.dataset.tp===p));
+  document.querySelectorAll("[data-panel]").forEach(x=>x.classList.toggle("hidden",x.dataset.panel!==p));
+}
+$("seg").addEventListener("click",e=>{ const b=e.target.closest("[data-tp]"); if(b) openTrain(b.dataset.tp); });
+
+// ---- profile ----
+let resetArm=false;
+function renderProfile(){
+  const L=levelInfo(S.xp), sc=scores(), rk=rankOf(L.lvl), c=2*Math.PI*42, t=(a,b)=>Math.round(a+(Math.min(L.lvl,100)-1)*(b-a)/99);
+  const yr=S.profile.year?`${S.profile.year}. Ausbildungsjahr`:"Future Pflegefachkraft";
+  $("statusWin").innerHTML=`<div class="sys-h"><span>STATUS</span></div>
+    <div class="status"><div class="p-av"><svg width="92" height="92"><circle cx="46" cy="46" r="42" fill="none" stroke="#0f2242" stroke-width="5"/>
+      <circle cx="46" cy="46" r="42" fill="none" stroke="#3fa9ff" stroke-width="5" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-L.into/L.need)}" style="filter:drop-shadow(0 0 5px #3fa9ff)"/></svg><div>${S.profile.avatar}</div></div>
+    <div><div class="r muted small" style="letter-spacing:.2em">NAME</div><div style="font-size:22px;font-weight:800">${esc(S.profile.name)}</div>
+      <div class="small muted">🩺 Pflege-Azubi · ${yr}</div></div></div>
+    <div class="kv"><div><span>LEVEL</span><b class="glowtxt">${L.lvl}</b></div><div><span>RANK</span><b style="color:${RANK_COL[rk]};text-shadow:0 0 10px ${RANK_COL[rk]}">${rk}-RANK</b></div>
+      <div><span>STREAK</span><b>${S.streak} 🔥</b></div><div><span>FOCUS DAYS</span><b>${medStreak()} 🧘</b></div></div>
+    <div class="xpbar" style="margin-top:14px"><i style="width:${L.into/L.need*100}%"></i></div><div class="small muted r" style="letter-spacing:.1em">EXP ${L.into} / ${L.need} · TOTAL ${S.xp}</div>`;
+  $("pScore").innerHTML=`<div class="sys-h"><span>STATS</span></div><div class="small muted" style="text-align:center">Power ${sc.nowAll} → potential <b style="color:var(--cyan)">${sc.potAll}</b></div><div class="areas">${areaRows(sc.now,sc.pot)}</div>`;
+  $("records").innerHTML=`<div class="sys-h"><span>RECORDS</span></div><div class="kv" style="margin-top:0">
+    <div><span>PUSH-UPS / DAY</span><b>${t(10,100)} <small class="muted">→ 100</small></b></div><div><span>PULL-UPS / DAY</span><b>${Math.max(1,t(1,20))} <small class="muted">→ 20</small></b></div>
+    <div><span>BEST MEMORY LV</span><b>${S.rec.mem}</b></div><div><span>BEST PATTERN</span><b>${S.rec.pat}/10</b></div>
+    <div><span>QUESTS DONE</span><b>${S.counts.quests}</b></div><div><span>DAILIES CLEARED</span><b>${S.counts.cleared}</b></div></div>`;
+  $("badges").innerHTML=BADGES.map(([id,e,n])=>`<div class="badge ${S.badges.includes(id)?"on":""}"><div>${e}</div>${n}</div>`).join("");
+  $("swSound").classList.toggle("on",S.settings.sound); $("swHap").classList.toggle("on",S.settings.haptics);
+  $("resetBtn").textContent=resetArm?"Tap again to delete everything":"Reset all progress";
+}
+$("swSound").addEventListener("click",()=>{ S.settings.sound=!S.settings.sound; if(!S.settings.sound) droneStop(); renderAll(); save(); });
+$("swHap").addEventListener("click",()=>{ S.settings.haptics=!S.settings.haptics; haptic(40); renderAll(); save(); });
+$("sndBtn").addEventListener("click",()=>{ S.settings.sound=!S.settings.sound; renderAll(); save(); if(S.settings.sound) SFX.system(); });
+$("retake").addEventListener("click",()=>openOnboarding(true));
+$("resetBtn").addEventListener("click",()=>{ if(!resetArm){ resetArm=true; renderProfile(); setTimeout(()=>{ resetArm=false; if(S.profile) renderProfile(); },4000); return; }
+  resetArm=false; const st=S.settings; S=fresh(); S.settings=st; save(); openOnboarding(); });
+
+// ================= navigation =================
+function go(v){
+  if(v==="add"){ go("quests"); setTimeout(()=>{ $("qInput").focus(); $("qInput").scrollIntoView({behavior:"smooth",block:"center"}); },50); return; }
+  document.querySelectorAll("[data-view]").forEach(s=>s.classList.toggle("hidden",s.dataset.view!==v));
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===v));
+  window.scrollTo({top:0});
+}
+$("main").addEventListener("click",e=>{
+  const tr=e.target.closest("[data-train]"); if(tr){ openTrain(tr.dataset.train); return; }
+  const g=e.target.closest("[data-go]"); if(g){ go(g.dataset.go); return; }
+  const ar=e.target.closest("[data-area]"); if(ar){ fCat=filter=ar.dataset.area; renderQuests(); go("quests"); return; }
+  const sy=e.target.closest("[data-sys]"); if(sy){ completeSys(sy.dataset.sys,sy); return; }
+  const lk=e.target.closest("[data-like]"); if(lk){ const p=S.feed.find(x=>x.id===lk.dataset.like); if(p){ p.liked=!p.liked; if(p.liked){ SFX.hit(); haptic(15); } renderAll(); save(); } return; }
+  const act=e.target.closest("[data-act]"); if(act){ const id=act.closest("[data-qid]").dataset.qid;
+    if(act.dataset.act==="chk") completeQuest(id,act);
+    if(act.dataset.act==="del"){ const snap=JSON.stringify(S); S.quests=S.quests.filter(q=>q.id!==id); renderAll(); save(); showToast("Quest deleted",()=>{ S=JSON.parse(snap); renderAll(); save(); }); } }
+});
+
+// ================= feedback ui =================
+let undoFn=null, toastT;
+function showToast(msg,fn){ undoFn=fn||null; $("toastMsg").textContent=msg; $("undoBtn").style.display=fn?"":"none";
+  $("toast").style.display="flex"; clearTimeout(toastT); toastT=setTimeout(()=>{ $("toast").style.display="none"; undoFn=null; },4000); }
+$("undoBtn").addEventListener("click",()=>{ if(undoFn) undoFn(); undoFn=null; $("toast").style.display="none"; });
+function showSys(head,e,t,x){ $("mHead").textContent=head; $("mEmoji").textContent=e; $("mTitle").textContent=t; $("mText").textContent=x; $("modal").style.display="grid"; shards(); }
+$("mClose").addEventListener("click",()=>$("modal").style.display="none");
+function floatText(txt,el){ const r=el?el.getBoundingClientRect():{left:innerWidth/2-20,top:innerHeight/2,width:0};
+  const f=document.createElement("div"); f.className="float"; f.textContent=txt; f.style.left=(r.left+r.width/2-30)+"px"; f.style.top=(r.top-6)+"px";
+  document.body.appendChild(f); setTimeout(()=>f.remove(),1200); }
+function shards(n=120){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv=$("confetti"), cx=cv.getContext("2d"); cv.width=innerWidth; cv.height=innerHeight;
+  const cols=["#8fe9ff","#3fa9ff","#8b5cf6","#ffffff"];
+  const ps=Array.from({length:n},()=>{ const a=Math.random()*Math.PI*2, v=Math.random()*9+3; return {x:innerWidth/2,y:innerHeight/2.6,vx:Math.cos(a)*v,vy:Math.sin(a)*v,s:Math.random()*3+1.5,c:pick(cols),l:1}; });
+  let f=0; (function loop(){ cx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vx*=.96; p.vy*=.96; p.l-=.012; cx.globalAlpha=Math.max(0,p.l); cx.fillStyle=p.c; cx.shadowColor=p.c; cx.shadowBlur=10;
+      cx.fillRect(p.x,p.y,p.s,p.s*3); });
+    cx.globalAlpha=1; if(++f<90) requestAnimationFrame(loop); else cx.clearRect(0,0,cv.width,cv.height); })();
+}
+// background particles
+(function bg(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv=$("bgfx"), cx=cv.getContext("2d"); let W,H; const ps=[];
+  const rs=()=>{ W=cv.width=innerWidth; H=cv.height=innerHeight; }; rs(); addEventListener("resize",rs);
+  for(let i=0;i<45;i++) ps.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.8+.4,v:Math.random()*.35+.08,a:Math.random()*.6+.2});
+  (function loop(){ if(!document.hidden){ cx.clearRect(0,0,W,H);
+      ps.forEach(p=>{ p.y-=p.v; if(p.y<-5){ p.y=H+5; p.x=Math.random()*W; } cx.globalAlpha=p.a; cx.fillStyle="#6fc3ff"; cx.shadowColor="#3fa9ff"; cx.shadowBlur=8; cx.beginPath(); cx.arc(p.x,p.y,p.s,0,7); cx.fill(); }); }
+    requestAnimationFrame(loop); })();
+})();
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && S.profile && !sess && !mem && !pat && !$("main").classList.contains("hidden")) renderAll(); });
+
+if(NATIVE){ const n=$("hapNote"); if(n) n.textContent="Vibration is on in the installed app."; }
+connect();
+})();
+</script>
+</body>
+</html>
